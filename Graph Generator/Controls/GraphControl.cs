@@ -25,7 +25,7 @@ namespace GraphGenerator
             vecMouse /= canvasScale;
 
 
-            if (e.Button == MouseButtons.Left && mouseVerId >= 0)
+            if (e.Button == MouseButtons.Left && mouseVerId >= 0 && canMoveVertex)
             {
                 // Move vertex.
                 drawing[mouseVerId] = vecMouse;
@@ -37,6 +37,7 @@ namespace GraphGenerator
                 mouseVerId = GetVertexAtVector(vecMouse);
             }
 
+            canMoveVertex = true;
             Refresh();
         }
 
@@ -92,18 +93,30 @@ namespace GraphGenerator
             }
         }
 
+        private void mnuContext_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            mnuVertex.Enabled = mouseVerId >= 0;
+            canMoveVertex = false;
+        }
+
+        private void mnuDraw_Click(object sender, EventArgs e)
+        {
+            StartDrawing();
+        }
+
 
         private Graph graph = null;
         private Vector[] drawing = null;
 
         private int drawingTime = -1;
-        private const int MaxDrawTime = 3000; // in ms
+        private const int MaxDrawTime = 10000; // in ms
         private const float VertexRadius = 5F; // in pixel
 
         // Scaling from virtual points to coordinates of canvas.
         private float canvasScale = 1F;
 
         int mouseVerId = -1;
+        bool canMoveVertex = true;
 
 
         internal Graph Graph

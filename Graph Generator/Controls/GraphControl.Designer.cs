@@ -31,13 +31,21 @@ namespace GraphGenerator
         {
             this.components = new System.ComponentModel.Container();
             this.pnlCanves = new System.Windows.Forms.Panel();
+            this.mnuContext = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuVertex = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuVertexAddEdge = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuDraw = new System.Windows.Forms.ToolStripMenuItem();
             this.drawingTimer = new System.Windows.Forms.Timer(this.components);
+            this.mnuVertexRemoveEdge = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuContext.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlCanves
             // 
             this.pnlCanves.BackColor = System.Drawing.Color.White;
             this.pnlCanves.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlCanves.ContextMenuStrip = this.mnuContext;
             this.pnlCanves.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlCanves.Location = new System.Drawing.Point(0, 0);
             this.pnlCanves.Name = "pnlCanves";
@@ -46,9 +54,52 @@ namespace GraphGenerator
             this.pnlCanves.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlCanves_Paint);
             this.pnlCanves.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlCanves_MouseMove);
             // 
+            // mnuContext
+            // 
+            this.mnuContext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuVertex,
+            this.toolStripMenuItem1,
+            this.mnuDraw});
+            this.mnuContext.Name = "mnuContext";
+            this.mnuContext.Size = new System.Drawing.Size(181, 76);
+            this.mnuContext.Opening += new System.ComponentModel.CancelEventHandler(this.mnuContext_Opening);
+            // 
+            // mnuVertex
+            // 
+            this.mnuVertex.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuVertexAddEdge,
+            this.mnuVertexRemoveEdge});
+            this.mnuVertex.Name = "mnuVertex";
+            this.mnuVertex.Size = new System.Drawing.Size(180, 22);
+            this.mnuVertex.Text = "Vertex";
+            // 
+            // mnuVertexAddEdge
+            // 
+            this.mnuVertexAddEdge.Name = "mnuVertexAddEdge";
+            this.mnuVertexAddEdge.Size = new System.Drawing.Size(180, 22);
+            this.mnuVertexAddEdge.Text = "Add edge";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            // 
+            // mnuDraw
+            // 
+            this.mnuDraw.Name = "mnuDraw";
+            this.mnuDraw.Size = new System.Drawing.Size(180, 22);
+            this.mnuDraw.Text = "Draw";
+            this.mnuDraw.Click += new System.EventHandler(this.mnuDraw_Click);
+            // 
             // drawingTimer
             // 
             this.drawingTimer.Tick += new System.EventHandler(this.drawingTimer_Tick);
+            // 
+            // mnuVertexRemoveEdge
+            // 
+            this.mnuVertexRemoveEdge.Name = "mnuVertexRemoveEdge";
+            this.mnuVertexRemoveEdge.Size = new System.Drawing.Size(180, 22);
+            this.mnuVertexRemoveEdge.Text = "Remove edge";
             // 
             // GraphControl
             // 
@@ -57,6 +108,7 @@ namespace GraphGenerator
             this.Controls.Add(this.pnlCanves);
             this.Name = "GraphControl";
             this.Resize += new System.EventHandler(this.GraphControl_Resize);
+            this.mnuContext.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -65,5 +117,11 @@ namespace GraphGenerator
 
         private System.Windows.Forms.Panel pnlCanves;
         private System.Windows.Forms.Timer drawingTimer;
+        private System.Windows.Forms.ContextMenuStrip mnuContext;
+        private System.Windows.Forms.ToolStripMenuItem mnuVertex;
+        private System.Windows.Forms.ToolStripMenuItem mnuVertexAddEdge;
+        private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem mnuDraw;
+        private System.Windows.Forms.ToolStripMenuItem mnuVertexRemoveEdge;
     }
 }
