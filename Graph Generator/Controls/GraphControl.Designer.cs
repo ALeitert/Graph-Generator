@@ -63,7 +63,7 @@ namespace GraphGenerator
             this.toolStripMenuItem1,
             this.mnuDraw});
             this.mnuContext.Name = "mnuContext";
-            this.mnuContext.Size = new System.Drawing.Size(107, 54);
+            this.mnuContext.Size = new System.Drawing.Size(181, 76);
             this.mnuContext.Opening += new System.ComponentModel.CancelEventHandler(this.mnuContext_Opening);
             // 
             // mnuVertex
@@ -103,6 +103,7 @@ namespace GraphGenerator
             this.mnuVertexRemoveEdge.Name = "mnuVertexRemoveEdge";
             this.mnuVertexRemoveEdge.Size = new System.Drawing.Size(180, 22);
             this.mnuVertexRemoveEdge.Text = "Remove edge";
+            this.mnuVertexRemoveEdge.Click += new System.EventHandler(this.mnuVertexRemoveEdge_Click);
             // 
             // GraphControl
             // 

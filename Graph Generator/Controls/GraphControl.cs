@@ -62,13 +62,23 @@ namespace GraphGenerator
             (
                 e.Button == MouseButtons.Left &&
                 editMode == EditMode.AddEdge &&
-                mouseVerId >= 0 &&
-                fromVerId != mouseVerId &&
-                !graph[fromVerId].Contains(mouseVerId)
+                CanAddEdge(fromVerId, mouseVerId)
             )
             {
                 graph[fromVerId].Add(mouseVerId);
                 graph[mouseVerId].Add(fromVerId);
+                editMode = EditMode.None;
+            }
+
+            if
+            (
+                e.Button == MouseButtons.Left &&
+                editMode == EditMode.RemoveEdge &&
+                CanRemoveEdge(fromVerId, mouseVerId)
+            )
+            {
+                graph[fromVerId].Remove(mouseVerId);
+                graph[mouseVerId].Remove(fromVerId);
                 editMode = EditMode.None;
             }
         }
@@ -144,6 +154,12 @@ namespace GraphGenerator
         private void mnuVertexAddEdge_Click(object sender, EventArgs e)
         {
             editMode = EditMode.AddEdge;
+            fromVerId = mouseVerId;
+        }
+
+        private void mnuVertexRemoveEdge_Click(object sender, EventArgs e)
+        {
+            editMode = EditMode.RemoveEdge;
             fromVerId = mouseVerId;
         }
 
@@ -304,6 +320,8 @@ namespace GraphGenerator
             g.SmoothingMode = SmoothingMode.HighQuality;
 
             const float PenWidth = 1F;
+            const float ThickPenWidth = 3F;
+
             Pen blackPen = new Pen(Color.Black, PenWidth);
 
             float vRad = VertexRadius;
@@ -313,6 +331,7 @@ namespace GraphGenerator
             float mDia = 4F * VertexRadius + 1F;
 
             bool canAddEdge = CanAddEdge(fromVerId, mouseVerId);
+            bool canRemEdge = CanRemoveEdge(fromVerId, mouseVerId);
 
 
             // --- Draw highlighting for vertex under mouse. ---
@@ -320,7 +339,8 @@ namespace GraphGenerator
             if
             (
                 (editMode == EditMode.None && mouseVerId >= 0) ||
-                (editMode == EditMode.AddEdge && canAddEdge)
+                (editMode == EditMode.AddEdge && canAddEdge) ||
+                (editMode == EditMode.RemoveEdge && canRemEdge)
             )
             {
                 PointF ptV = (drawing[mouseVerId] * scale).ToPointF();
@@ -329,12 +349,30 @@ namespace GraphGenerator
 
 
             // --- Draw edges. ---
-            
+
+            int ignoreId = -1;
+
+            if (editMode == EditMode.RemoveEdge)
+            {
+                ignoreId = fromVerId;
+                foreach (int uId in graph[fromVerId])
+                {
+                    g.DrawLine
+                    (
+                        new Pen(Color.Pink, ThickPenWidth),
+                        (drawing[fromVerId] * scale).ToPointF(),
+                        (drawing[uId] * scale).ToPointF()
+                    );
+                }
+            }
+
             for (int vId = 0; vId < graph.Size; vId++)
             {
                 foreach (int uId in graph[vId])
                 {
                     if (uId < vId) continue;
+                    if (uId == ignoreId || vId == ignoreId) continue;
+
                     g.DrawLine
                     (
                         blackPen,
@@ -347,23 +385,39 @@ namespace GraphGenerator
             if (editMode == EditMode.AddEdge)
             {
                 Pen edgePen;
+                Vector vecTo;
 
-                if (!canAddEdge)
+                if (canAddEdge)
+                {
+                    edgePen = new Pen(Color.Green, ThickPenWidth);
+                    vecTo = drawing[mouseVerId];
+                }
+                else
                 {
                     edgePen = new Pen(Color.Gray, PenWidth);
                     edgePen.DashStyle = DashStyle.Dash;
                     edgePen.DashPattern = new float[] { vRad, vRad };
-                }
-                else
-                {
-                    edgePen = new Pen(Color.Green, 2f * PenWidth);
+
+                    vecTo = vecMouse;
                 }
 
                 g.DrawLine
                 (
                     edgePen,
                     (drawing[fromVerId] * scale).ToPointF(),
-                    (vecMouse * scale).ToPointF()
+                    (vecTo * scale).ToPointF()
+                );
+            }
+
+            if (editMode == EditMode.RemoveEdge && canRemEdge)
+            {
+                Pen edgePen = new Pen(Color.Red, ThickPenWidth);
+
+                g.DrawLine
+                (
+                    edgePen,
+                    (drawing[fromVerId] * scale).ToPointF(),
+                    (drawing[mouseVerId] * scale).ToPointF()
                 );
             }
 
@@ -387,6 +441,18 @@ namespace GraphGenerator
             if (fromId == toId) return false;
 
             return !graph[fromId].Contains(toId);
+        }
+
+        private bool CanRemoveEdge(int fromId, int toId)
+        {
+            if (graph == null) return false;
+
+            if (fromId < 0 || fromId >= graph.Size) return false;
+            if (toId < 0 || toId >= graph.Size) return false;
+
+            if (fromId == toId) return false;
+
+            return graph[fromId].Contains(toId);
         }
     }
 }
