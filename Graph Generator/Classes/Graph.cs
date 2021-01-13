@@ -42,7 +42,7 @@ namespace GraphGenerator
 
 
             // --- Generate spanning tree. ---
-            
+
             for (int vId = 1 /* 0 is root and has no parent */; vId < size; vId++)
             {
                 int pId = rng.Next(vId);
@@ -51,7 +51,7 @@ namespace GraphGenerator
                 g[pId].Add(vId);
             }
 
-            
+
             // --- Add remaining edges. ---
 
             for (int i = size; i <= eCount; i++)
@@ -70,5 +70,106 @@ namespace GraphGenerator
             return g;
         }
 
+
+        private Vector[] GenerateStartPoints()
+        {
+            Random rng = new Random();
+            Vector[] startPos = new Vector[Size];
+
+            // Vertices will be placed randomly in a square of length 2 sqrt(n).
+            double sqrLen = 2.0 * Math.Sqrt(Size);
+
+            for (int vId = 0; vId < Size; vId++)
+            {
+                startPos[vId] = new Vector
+                (
+                    rng.NextDouble() * sqrLen,
+                    rng.NextDouble() * sqrLen
+                );
+            }
+
+            return startPos;
+        }
+
+        /// <summary>
+        /// "Draws" the graph with a force-based approach and returns the computed coordinates.
+        /// </summary>
+        public Vector[] Draw()
+        {
+            return Draw(null);
+        }
+
+        /// <summary>
+        /// "Draws" the graph with a force-based approach and returns the computed coordinates.
+        /// </summary>
+        public Vector[] Draw(Vector[] points)
+        {
+            if (points == null)
+            {
+                points = GenerateStartPoints();
+            }
+
+
+            // --- Draw the graph. ---
+
+            Vector[] forces = new Vector[Size];
+
+            // Parameters for drawing.
+            // No idea which does what but they seem to work well.
+
+            double d0 = 7;
+            double lf = 5;
+            double kg = 0.5 * d0 * d0;
+            double kf = 0.5 / (d0 - lf);
+
+            const double forceSpeed = 0.05;
+            const int iterations = 100;
+
+
+            for (int i = 0; i < iterations; i++)
+            {
+                // Compute forces on each vertex.
+                for (int vId = 0; vId < Size; vId++)
+                {
+                    Vector vecV = points[vId];
+                    forces[vId] = new Vector(0, 0);
+
+                    for (int uId = 0; uId < Size; uId++)
+                    {
+                        if (uId == vId) continue;
+
+                        Vector vecU = points[uId];
+
+                        Vector vecUV = vecV - vecU;
+                        Vector dirUV = vecUV.Normalize();
+
+                        double disUV = vecUV.Length;
+
+                        double g = kg / Math.Pow(disUV, 2);
+
+                        if (adjList[vId].Contains(uId))
+                        {
+                            double f = kf * (disUV - lf);
+                            forces[vId] += vecUV * (g - f);
+                        }
+                        else
+                        {
+                            forces[vId] += vecUV * g;
+                        }
+                    }
+                }
+
+                // Apply forces.
+                for (int vId = 0; vId < Size; vId++)
+                {
+                    Vector vFor = forces[vId];
+                    double dis = vFor.Length;
+                    points[vId] += forceSpeed * dis * vFor.Normalize();
+                }
+            }
+
+
+            return points;
+        }
     }
 }
