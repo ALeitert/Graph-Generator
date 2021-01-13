@@ -34,6 +34,12 @@ namespace GraphGenerator
             this.pnlToolBar = new System.Windows.Forms.Panel();
             this.btnGenerate = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.lblV = new System.Windows.Forms.ToolStripLabel();
+            this.txtV = new System.Windows.Forms.ToolStripTextBox();
+            this.lblE = new System.Windows.Forms.ToolStripLabel();
+            this.txtE = new System.Windows.Forms.ToolStripTextBox();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.lblSeed = new System.Windows.Forms.ToolStripLabel();
             this.mainToolBar.SuspendLayout();
             this.pnlToolBar.SuspendLayout();
             this.SuspendLayout();
@@ -42,8 +48,14 @@ namespace GraphGenerator
             // 
             this.mainToolBar.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.mainToolBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lblV,
+            this.txtV,
+            this.lblE,
+            this.txtE,
+            this.btnGenerate,
             this.toolStripSeparator1,
-            this.btnGenerate});
+            this.lblSeed,
+            this.toolStripSeparator2});
             this.mainToolBar.Location = new System.Drawing.Point(0, 0);
             this.mainToolBar.Name = "mainToolBar";
             this.mainToolBar.Size = new System.Drawing.Size(776, 25);
@@ -84,6 +96,45 @@ namespace GraphGenerator
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
+            // lblV
+            // 
+            this.lblV.Name = "lblV";
+            this.lblV.Size = new System.Drawing.Size(25, 22);
+            this.lblV.Text = "n =";
+            // 
+            // txtV
+            // 
+            this.txtV.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtV.Name = "txtV";
+            this.txtV.Size = new System.Drawing.Size(50, 25);
+            this.txtV.Text = "10";
+            // 
+            // lblE
+            // 
+            this.lblE.Name = "lblE";
+            this.lblE.Size = new System.Drawing.Size(29, 22);
+            this.lblE.Text = "m =";
+            // 
+            // txtE
+            // 
+            this.txtE.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtE.Name = "txtE";
+            this.txtE.Size = new System.Drawing.Size(50, 25);
+            this.txtE.Text = "15";
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // lblSeed
+            // 
+            this.lblSeed.AutoSize = false;
+            this.lblSeed.Name = "lblSeed";
+            this.lblSeed.Size = new System.Drawing.Size(70, 22);
+            this.lblSeed.Text = "Seed = 0";
+            this.lblSeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -108,5 +159,11 @@ namespace GraphGenerator
         private System.Windows.Forms.Panel pnlCanves;
         private System.Windows.Forms.Panel pnlToolBar;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripLabel lblV;
+        private System.Windows.Forms.ToolStripTextBox txtV;
+        private System.Windows.Forms.ToolStripLabel lblE;
+        private System.Windows.Forms.ToolStripTextBox txtE;
+        private System.Windows.Forms.ToolStripLabel lblSeed;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
     }
 }
