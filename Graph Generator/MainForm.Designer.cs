@@ -31,16 +31,16 @@ namespace GraphGenerator
         {
             this.components = new System.ComponentModel.Container();
             this.mainToolBar = new System.Windows.Forms.ToolStrip();
-            this.pnlCanves = new System.Windows.Forms.Panel();
-            this.pnlToolBar = new System.Windows.Forms.Panel();
-            this.btnGenerate = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.lblV = new System.Windows.Forms.ToolStripLabel();
             this.txtV = new System.Windows.Forms.ToolStripTextBox();
             this.lblE = new System.Windows.Forms.ToolStripLabel();
             this.txtE = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnGenerate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.lblSeed = new System.Windows.Forms.ToolStripLabel();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.pnlCanves = new System.Windows.Forms.Panel();
+            this.pnlToolBar = new System.Windows.Forms.Panel();
             this.drawingTimer = new System.Windows.Forms.Timer(this.components);
             this.mainToolBar.SuspendLayout();
             this.pnlToolBar.SuspendLayout();
@@ -62,42 +62,6 @@ namespace GraphGenerator
             this.mainToolBar.Name = "mainToolBar";
             this.mainToolBar.Size = new System.Drawing.Size(776, 25);
             this.mainToolBar.TabIndex = 0;
-            // 
-            // pnlCanves
-            // 
-            this.pnlCanves.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlCanves.BackColor = System.Drawing.Color.White;
-            this.pnlCanves.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlCanves.Location = new System.Drawing.Point(12, 43);
-            this.pnlCanves.Name = "pnlCanves";
-            this.pnlCanves.Size = new System.Drawing.Size(776, 395);
-            this.pnlCanves.TabIndex = 2;
-            this.pnlCanves.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlCanves_Paint);
-            // 
-            // pnlToolBar
-            // 
-            this.pnlToolBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlToolBar.Controls.Add(this.mainToolBar);
-            this.pnlToolBar.Location = new System.Drawing.Point(12, 12);
-            this.pnlToolBar.Name = "pnlToolBar";
-            this.pnlToolBar.Size = new System.Drawing.Size(776, 25);
-            this.pnlToolBar.TabIndex = 3;
-            // 
-            // btnGenerate
-            // 
-            this.btnGenerate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnGenerate.Name = "btnGenerate";
-            this.btnGenerate.Size = new System.Drawing.Size(58, 22);
-            this.btnGenerate.Text = "Generate";
-            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // lblV
             // 
@@ -125,10 +89,18 @@ namespace GraphGenerator
             this.txtE.Size = new System.Drawing.Size(50, 25);
             this.txtE.Text = "15";
             // 
-            // toolStripSeparator2
+            // btnGenerate
             // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            this.btnGenerate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnGenerate.Name = "btnGenerate";
+            this.btnGenerate.Size = new System.Drawing.Size(58, 22);
+            this.btnGenerate.Text = "Generate";
+            this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // lblSeed
             // 
@@ -137,6 +109,34 @@ namespace GraphGenerator
             this.lblSeed.Size = new System.Drawing.Size(70, 22);
             this.lblSeed.Text = "Seed = 0";
             this.lblSeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
+            // 
+            // pnlCanves
+            // 
+            this.pnlCanves.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlCanves.BackColor = System.Drawing.Color.White;
+            this.pnlCanves.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlCanves.Location = new System.Drawing.Point(12, 43);
+            this.pnlCanves.Name = "pnlCanves";
+            this.pnlCanves.Size = new System.Drawing.Size(776, 395);
+            this.pnlCanves.TabIndex = 2;
+            this.pnlCanves.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlCanves_Paint);
+            // 
+            // pnlToolBar
+            // 
+            this.pnlToolBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlToolBar.Controls.Add(this.mainToolBar);
+            this.pnlToolBar.Location = new System.Drawing.Point(12, 12);
+            this.pnlToolBar.Name = "pnlToolBar";
+            this.pnlToolBar.Size = new System.Drawing.Size(776, 25);
+            this.pnlToolBar.TabIndex = 3;
             // 
             // drawingTimer
             // 
@@ -151,6 +151,7 @@ namespace GraphGenerator
             this.Controls.Add(this.pnlCanves);
             this.Name = "MainForm";
             this.Text = "Graph Generator";
+            this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.mainToolBar.ResumeLayout(false);
             this.mainToolBar.PerformLayout();
             this.pnlToolBar.ResumeLayout(false);

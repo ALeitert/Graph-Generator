@@ -75,6 +75,12 @@ namespace GraphGenerator
             }
         }
 
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            CenterGraph();
+            Refresh();
+        }
+
 
         private void DrawGraph()
         {
