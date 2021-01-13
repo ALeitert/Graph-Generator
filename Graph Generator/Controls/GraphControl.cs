@@ -15,13 +15,13 @@ namespace GraphGenerator
 
         private void GraphControl_Resize(object sender, EventArgs e)
         {
-            CenterGraph();
+            UpddateCanvasScale();
             Refresh();
         }
 
         private void pnlCanves_Paint(object sender, PaintEventArgs e)
         {
-            PaintGraph(e.Graphics, pnlCanves.Width, pnlCanves.Height);
+            PaintGraph(e.Graphics, pnlCanves.Width, pnlCanves.Height, canvasScale);
         }
 
         private void drawingTimer_Tick(object sender, EventArgs e)
@@ -41,6 +41,10 @@ namespace GraphGenerator
 
         private int drawingTime = -1;
         private const int MaxDrawTime = 3000; // in ms
+        private const float VertexRadius = 5F; // in pixel
+
+        // Scaling from virtual points to coordinates of canvas.
+        private float canvasScale = 1F;
 
 
         internal Graph Graph
@@ -79,7 +83,9 @@ namespace GraphGenerator
             }
 
             drawing = graph.Draw(drawing);
+
             CenterGraph();
+            UpddateCanvasScale();
         }
 
         /// <summary>
@@ -116,26 +122,16 @@ namespace GraphGenerator
             }
         }
 
-        /// <summary>
-        /// Uses the given graphics object to paint the graph centered in the are of the given size.
-        /// </summary>
-        private void PaintGraph(Graphics g, int width, int height)
+        ///
+        private void UpddateCanvasScale()
         {
-            /*
-             * ToDo: Potential improvements.
-             *   - Give a rectangle instaed of just a size.
-             *   - Undo configurations of g.
-             */
+            if (drawing == null) return;
+            canvasScale = ComputeScale(pnlCanves.Width, pnlCanves.Height);
+        }
 
-            g.Clear(pnlCanves.BackColor);
-
-            if (graph == null || drawing == null)
-            {
-                return;
-            }
-
-
-            // --- Determine scale. ---
+        private float ComputeScale(double width, double height)
+        {
+            if (drawing == null) return 1F;
 
             double minX = double.MaxValue;
             double minY = double.MaxValue;
@@ -154,10 +150,29 @@ namespace GraphGenerator
                 maxY = Math.Max(maxY, vecV.Y);
             }
 
-            double scaleX = 0.8 * (double)width / (maxX - minX);
-            double scaleY = 0.8 * (double)height / (maxY - minY);
+            double scaleX = 0.8 * width / (maxX - minX);
+            double scaleY = 0.8 * height / (maxY - minY);
 
-            float scale = Convert.ToSingle(Math.Min(scaleX, scaleY));
+            return Convert.ToSingle(Math.Min(scaleX, scaleY));
+        }
+
+        /// <summary>
+        /// Uses the given graphics object to paint the graph centered in the are of the given size.
+        /// </summary>
+        private void PaintGraph(Graphics g, int width, int height, float scale)
+        {
+            /*
+             * ToDo: Potential improvements.
+             *   - Give a rectangle instaed of just a size.
+             *   - Undo configurations of g.
+             */
+
+            g.Clear(pnlCanves.BackColor);
+
+            if (graph == null || drawing == null)
+            {
+                return;
+            }
 
 
             // --- Draw graph. ---
@@ -183,10 +198,13 @@ namespace GraphGenerator
                 }
             }
 
+            float vRad = VertexRadius;
+            float vDia = 2F * VertexRadius + 1F;
+
             for (int vId = 0; vId < graph.Size; vId++)
             {
                 PointF ptV = (drawing[vId] * scale).ToPointF();
-                g.FillEllipse(Brushes.DarkGreen, ptV.X - 5, ptV.Y - 5, 11, 11);
+                g.FillEllipse(Brushes.DarkGreen, ptV.X - vRad, ptV.Y - vRad, vDia, vDia);
             }
         }
     }
