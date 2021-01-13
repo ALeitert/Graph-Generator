@@ -5,11 +5,15 @@ namespace GraphGenerator
 {
     class Graph
     {
-        int[][] adjList = null;
+        HashSet<int>[] adjList = null;
 
         public Graph(int size)
         {
-            adjList = new int[size][];
+            adjList = new HashSet<int>[size];
+            for (int vId = 0; vId < size; vId++)
+            {
+                adjList[vId] = new HashSet<int>();
+            }
         }
 
         public int Size
@@ -20,7 +24,7 @@ namespace GraphGenerator
             }
         }
 
-        public int[] this[int vId]
+        public HashSet<int> this[int vId]
         {
             get
             {
@@ -36,12 +40,6 @@ namespace GraphGenerator
             Random rng = new Random(seed);
             Graph g = new Graph(size);
 
-            HashSet<int>[] edges = new HashSet<int>[size];
-            for (int i = 0; i < size; i++)
-            {
-                edges[i] = new HashSet<int>();
-            }
-
 
             // --- Generate spanning tree. ---
             
@@ -49,8 +47,8 @@ namespace GraphGenerator
             {
                 int pId = rng.Next(vId);
 
-                edges[vId].Add(pId);
-                edges[pId].Add(vId);
+                g[vId].Add(pId);
+                g[pId].Add(vId);
             }
 
             
@@ -64,21 +62,13 @@ namespace GraphGenerator
                 int vId = rng.Next(size - 1);
                 if (vId >= uId) vId++;
 
-                edges[uId].Add(vId);
-                edges[vId].Add(uId);
-            }
-
-
-            // --- Build adjacency list. ---
-
-            for (int vId = 0; vId < size; vId++)
-            {
-                g.adjList[vId] = new int[edges[vId].Count];
-                edges[vId].CopyTo(g[vId]);
+                g[uId].Add(vId);
+                g[vId].Add(uId);
             }
 
 
             return g;
         }
+
     }
 }
