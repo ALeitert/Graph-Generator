@@ -7,6 +7,13 @@ namespace GraphGenerator
 {
     public partial class GraphControl : UserControl
     {
+        private enum EditMode
+        {
+            None,
+            AddEdge,
+            RemoveEdge
+        }
+
         public GraphControl()
         {
             InitializeComponent();
@@ -20,7 +27,7 @@ namespace GraphGenerator
 
             // --- Determine virtual coordinate of mouse. ---
 
-            Vector vecMouse = new Vector(e.Location);
+            vecMouse = new Vector(e.Location);
             vecMouse -= new Vector(pnlCanves.Width / 2, pnlCanves.Height / 2);
             vecMouse /= canvasScale;
 
@@ -39,6 +46,36 @@ namespace GraphGenerator
 
             canMoveVertex = true;
             Refresh();
+        }
+
+        private void pnlCanves_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                if (editMode == EditMode.None) return;
+
+                editMode = EditMode.None;
+                pnlCanves.ContextMenuStrip = null;
+            }
+
+            if
+            (
+                e.Button == MouseButtons.Left &&
+                editMode == EditMode.AddEdge &&
+                mouseVerId >= 0 &&
+                fromVerId != mouseVerId &&
+                !graph[fromVerId].Contains(mouseVerId)
+            )
+            {
+                graph[fromVerId].Add(mouseVerId);
+                graph[mouseVerId].Add(fromVerId);
+                editMode = EditMode.None;
+            }
+        }
+
+        private void pnlCanves_MouseUp(object sender, MouseEventArgs e)
+        {
+            pnlCanves.ContextMenuStrip = mnuContext;
         }
 
         /// <summary>
@@ -104,6 +141,12 @@ namespace GraphGenerator
             StartDrawing();
         }
 
+        private void mnuVertexAddEdge_Click(object sender, EventArgs e)
+        {
+            editMode = EditMode.AddEdge;
+            fromVerId = mouseVerId;
+        }
+
 
         private Graph graph = null;
         private Vector[] drawing = null;
@@ -115,8 +158,12 @@ namespace GraphGenerator
         // Scaling from virtual points to coordinates of canvas.
         private float canvasScale = 1F;
 
+        Vector vecMouse;
         int mouseVerId = -1;
         bool canMoveVertex = true;
+
+        EditMode editMode = EditMode.None;
+        int fromVerId = -1;
 
 
         internal Graph Graph
@@ -129,6 +176,10 @@ namespace GraphGenerator
             {
                 graph = value;
                 drawing = null;
+
+                editMode = EditMode.None;
+                pnlCanves.ContextMenuStrip = mnuContext;
+
                 StartDrawing();
             }
         }
@@ -247,7 +298,7 @@ namespace GraphGenerator
             }
 
 
-            // --- Draw graph. ---
+            // --- Parameters for drawing. ---
 
             g.TranslateTransform(width / 2, height / 2);
             g.SmoothingMode = SmoothingMode.HighQuality;
@@ -261,14 +312,24 @@ namespace GraphGenerator
             float mRad = 2F * VertexRadius;
             float mDia = 4F * VertexRadius + 1F;
 
-            // Draw highlighting for vertex under mouse.
-            if (mouseVerId >= 0)
+            bool canAddEdge = CanAddEdge(fromVerId, mouseVerId);
+
+
+            // --- Draw highlighting for vertex under mouse. ---
+
+            if
+            (
+                (editMode == EditMode.None && mouseVerId >= 0) ||
+                (editMode == EditMode.AddEdge && canAddEdge)
+            )
             {
                 PointF ptV = (drawing[mouseVerId] * scale).ToPointF();
                 g.FillEllipse(Brushes.LightGreen, ptV.X - mRad, ptV.Y - mRad, mDia, mDia);
             }
 
-            // Draw edges.
+
+            // --- Draw edges. ---
+            
             for (int vId = 0; vId < graph.Size; vId++)
             {
                 foreach (int uId in graph[vId])
@@ -283,11 +344,49 @@ namespace GraphGenerator
                 }
             }
 
+            if (editMode == EditMode.AddEdge)
+            {
+                Pen edgePen;
+
+                if (!canAddEdge)
+                {
+                    edgePen = new Pen(Color.Gray, PenWidth);
+                    edgePen.DashStyle = DashStyle.Dash;
+                    edgePen.DashPattern = new float[] { vRad, vRad };
+                }
+                else
+                {
+                    edgePen = new Pen(Color.Green, 2f * PenWidth);
+                }
+
+                g.DrawLine
+                (
+                    edgePen,
+                    (drawing[fromVerId] * scale).ToPointF(),
+                    (vecMouse * scale).ToPointF()
+                );
+            }
+
+
+            // --- Draw vertices. ---
+
             for (int vId = 0; vId < graph.Size; vId++)
             {
                 PointF ptV = (drawing[vId] * scale).ToPointF();
                 g.FillEllipse(Brushes.DarkGreen, ptV.X - vRad, ptV.Y - vRad, vDia, vDia);
             }
+        }
+
+        private bool CanAddEdge(int fromId, int toId)
+        {
+            if (graph == null) return false;
+
+            if (fromId < 0 || fromId >= graph.Size) return false;
+            if (toId < 0 || toId >= graph.Size) return false;
+
+            if (fromId == toId) return false;
+
+            return !graph[fromId].Contains(toId);
         }
     }
 }

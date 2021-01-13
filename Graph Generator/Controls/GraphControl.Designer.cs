@@ -52,7 +52,9 @@ namespace GraphGenerator
             this.pnlCanves.Size = new System.Drawing.Size(150, 150);
             this.pnlCanves.TabIndex = 3;
             this.pnlCanves.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlCanves_Paint);
+            this.pnlCanves.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pnlCanves_MouseDown);
             this.pnlCanves.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlCanves_MouseMove);
+            this.pnlCanves.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pnlCanves_MouseUp);
             // 
             // mnuContext
             // 
@@ -61,7 +63,7 @@ namespace GraphGenerator
             this.toolStripMenuItem1,
             this.mnuDraw});
             this.mnuContext.Name = "mnuContext";
-            this.mnuContext.Size = new System.Drawing.Size(181, 76);
+            this.mnuContext.Size = new System.Drawing.Size(107, 54);
             this.mnuContext.Opening += new System.ComponentModel.CancelEventHandler(this.mnuContext_Opening);
             // 
             // mnuVertex
@@ -78,6 +80,7 @@ namespace GraphGenerator
             this.mnuVertexAddEdge.Name = "mnuVertexAddEdge";
             this.mnuVertexAddEdge.Size = new System.Drawing.Size(180, 22);
             this.mnuVertexAddEdge.Text = "Add edge";
+            this.mnuVertexAddEdge.Click += new System.EventHandler(this.mnuVertexAddEdge_Click);
             // 
             // toolStripMenuItem1
             // 
