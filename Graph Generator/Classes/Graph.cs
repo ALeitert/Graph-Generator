@@ -150,7 +150,7 @@ namespace GraphGenerator
                         if (adjList[vId].Contains(uId))
                         {
                             double f = kf * (disUV - lf);
-                            forces[vId] += vecUV * (g - f);
+                            forces[vId] += dirUV * (g - f);
                         }
                         else
                         {
