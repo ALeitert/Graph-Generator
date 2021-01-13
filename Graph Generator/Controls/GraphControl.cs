@@ -25,15 +25,33 @@ namespace GraphGenerator
             vecMouse /= canvasScale;
 
 
-            // --- Find vertex closest to mouse. ---
+            if (e.Button == MouseButtons.Left && mouseVerId >= 0)
+            {
+                // Move vertex.
+                drawing[mouseVerId] = vecMouse;
+                drawingTimer.Stop();
+            }
+            else
+            {
+                // Find vertex closest to mouse.
+                mouseVerId = GetVertexAtVector(vecMouse);
+            }
 
+            Refresh();
+        }
+
+        /// <summary>
+        /// Finds the vertex closest to the given virtual coordinate.
+        /// </summary>
+        private int GetVertexAtVector(Vector vect)
+        {
             double minDis = double.MaxValue;
             int minVertId = -1;
 
             for (int vId = 0; vId < drawing.Length; vId++)
             {
                 Vector vecV = drawing[vId];
-                double dist = (vecV - vecMouse).Length;
+                double dist = (vecV - vect).Length;
 
                 if (dist < minDis)
                 {
@@ -42,16 +60,14 @@ namespace GraphGenerator
                 }
             }
 
-            if (minDis * canvasScale <= VertexRadius + 2F)
+            if (minVertId >= 0 && minDis * canvasScale <= VertexRadius + 2F)
             {
-                mouseVerId = minVertId;
+                return minVertId;
             }
             else
             {
-                mouseVerId = -1;
+                return -1;
             }
-
-            Refresh();
         }
 
         private void GraphControl_Resize(object sender, EventArgs e)
