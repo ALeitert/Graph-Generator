@@ -13,6 +13,47 @@ namespace GraphGenerator
             typeof(Control).GetProperty("DoubleBuffered", (System.Reflection.BindingFlags)(-1)).SetValue(pnlCanves, true, new object[] { });
         }
 
+        private void pnlCanves_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (drawing == null) return;
+
+
+            // --- Determine virtual coordinate of mouse. ---
+
+            Vector vecMouse = new Vector(e.Location);
+            vecMouse -= new Vector(pnlCanves.Width / 2, pnlCanves.Height / 2);
+            vecMouse /= canvasScale;
+
+
+            // --- Find vertex closest to mouse. ---
+
+            double minDis = double.MaxValue;
+            int minVertId = -1;
+
+            for (int vId = 0; vId < drawing.Length; vId++)
+            {
+                Vector vecV = drawing[vId];
+                double dist = (vecV - vecMouse).Length;
+
+                if (dist < minDis)
+                {
+                    minDis = dist;
+                    minVertId = vId;
+                }
+            }
+
+            if (minDis * canvasScale <= VertexRadius + 2F)
+            {
+                mouseVerId = minVertId;
+            }
+            else
+            {
+                mouseVerId = -1;
+            }
+
+            Refresh();
+        }
+
         private void GraphControl_Resize(object sender, EventArgs e)
         {
             UpddateCanvasScale();
@@ -45,6 +86,8 @@ namespace GraphGenerator
 
         // Scaling from virtual points to coordinates of canvas.
         private float canvasScale = 1F;
+
+        int mouseVerId = -1;
 
 
         internal Graph Graph
@@ -183,6 +226,19 @@ namespace GraphGenerator
             const float PenWidth = 1F;
             Pen blackPen = new Pen(Color.Black, PenWidth);
 
+            float vRad = VertexRadius;
+            float vDia = 2F * VertexRadius + 1F;
+
+            float mRad = 2F * VertexRadius;
+            float mDia = 4F * VertexRadius + 1F;
+
+            // Draw highlighting for vertex under mouse.
+            if (mouseVerId >= 0)
+            {
+                PointF ptV = (drawing[mouseVerId] * scale).ToPointF();
+                g.FillEllipse(Brushes.LightGreen, ptV.X - mRad, ptV.Y - mRad, mDia, mDia);
+            }
+
             // Draw edges.
             for (int vId = 0; vId < graph.Size; vId++)
             {
@@ -197,9 +253,6 @@ namespace GraphGenerator
                     );
                 }
             }
-
-            float vRad = VertexRadius;
-            float vDia = 2F * VertexRadius + 1F;
 
             for (int vId = 0; vId < graph.Size; vId++)
             {

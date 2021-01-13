@@ -44,6 +44,7 @@ namespace GraphGenerator
             this.pnlCanves.Size = new System.Drawing.Size(150, 150);
             this.pnlCanves.TabIndex = 3;
             this.pnlCanves.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlCanves_Paint);
+            this.pnlCanves.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pnlCanves_MouseMove);
             // 
             // drawingTimer
             // 
