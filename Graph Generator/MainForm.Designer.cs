@@ -29,6 +29,7 @@ namespace GraphGenerator
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.mainToolBar = new System.Windows.Forms.ToolStrip();
             this.pnlCanves = new System.Windows.Forms.Panel();
             this.pnlToolBar = new System.Windows.Forms.Panel();
@@ -40,6 +41,7 @@ namespace GraphGenerator
             this.txtE = new System.Windows.Forms.ToolStripTextBox();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.lblSeed = new System.Windows.Forms.ToolStripLabel();
+            this.drawingTimer = new System.Windows.Forms.Timer(this.components);
             this.mainToolBar.SuspendLayout();
             this.pnlToolBar.SuspendLayout();
             this.SuspendLayout();
@@ -72,6 +74,7 @@ namespace GraphGenerator
             this.pnlCanves.Name = "pnlCanves";
             this.pnlCanves.Size = new System.Drawing.Size(776, 395);
             this.pnlCanves.TabIndex = 2;
+            this.pnlCanves.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlCanves_Paint);
             // 
             // pnlToolBar
             // 
@@ -135,6 +138,10 @@ namespace GraphGenerator
             this.lblSeed.Text = "Seed = 0";
             this.lblSeed.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // drawingTimer
+            // 
+            this.drawingTimer.Tick += new System.EventHandler(this.drawingTimer_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -165,5 +172,6 @@ namespace GraphGenerator
         private System.Windows.Forms.ToolStripTextBox txtE;
         private System.Windows.Forms.ToolStripLabel lblSeed;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.Timer drawingTimer;
     }
 }
