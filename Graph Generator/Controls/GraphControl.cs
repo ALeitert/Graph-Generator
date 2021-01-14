@@ -196,9 +196,36 @@ namespace GraphGenerator
                 editMode = EditMode.None;
                 pnlCanves.ContextMenuStrip = mnuContext;
 
-                StartDrawing();
+                if (AutoDraw) StartDrawing();
             }
         }
+
+        internal Vector[] Drawing
+        {
+            get
+            {
+                return drawing;
+            }
+            set
+            {
+                if (graph != null && value != null && value.Length == graph.Size)
+                {
+                    drawing = value;
+
+                    CenterGraph();
+                    UpddateCanvasScale();
+                }
+                else
+                {
+                    drawing = null; 
+                }
+
+                drawingTimer.Stop();
+                Refresh();
+            }
+        }
+
+        public bool AutoDraw { get; set; } = true;
 
         /// <summary>
         /// Starts the process of drawing the graph.
