@@ -262,25 +262,13 @@ namespace GraphGenerator
             if (drawing == null) return;
 
 
-            double minX = double.MaxValue;
-            double minY = double.MaxValue;
+            RectangleF rect = Geometry.GetSurroundingRectangle(Drawing);
 
-            double maxX = double.MinValue;
-            double maxY = double.MinValue;
-
-            for (int vId = 0; vId < graph.Size; vId++)
-            {
-                Vector vecV = drawing[vId];
-
-                minX = Math.Min(minX, vecV.X);
-                minY = Math.Min(minY, vecV.Y);
-
-                maxX = Math.Max(maxX, vecV.X);
-                maxY = Math.Max(maxY, vecV.Y);
-            }
-
-            Vector shift = new Vector(minX + maxX, minY + maxY);
-            shift *= -0.5;
+            Vector shift = new Vector
+            (
+                -rect.X - 0.5 * rect.Width,
+                -rect.Y - 0.5 * rect.Height
+            );
 
             for (int vId = 0; vId < graph.Size; vId++)
             {
