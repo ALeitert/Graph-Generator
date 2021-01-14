@@ -109,5 +109,35 @@ namespace GraphGenerator
 
             return new Vector[] { X, Y, Z };
         }
+
+        /// <summary>
+        /// Allows to determine if a point is left or right a line xy.
+        /// </summary>
+        /// <returns>
+        /// A positive number if p is right of y from perspective of x in a left-handed coordinate system.
+        /// </returns>
+        public static double GetScalar(Vector x, Vector y, Vector p)
+        {
+            return (x.X - y.X) * (p.Y - y.Y) - (x.Y - y.Y) * (p.X - y.X);
+        }
+
+        /// <summary>
+        /// Determines if a given point is within the given triangle.
+        /// </summary>
+        public static bool InTriangle(Vector[] triangle, Vector p)
+        {
+            if (triangle == null || triangle.Length != 3)
+            {
+                return false;
+            }
+
+            double scalXY = GetScalar(triangle[0], triangle[1], p);
+            double scalYZ = GetScalar(triangle[1], triangle[2], p);
+            double scalZX = GetScalar(triangle[2], triangle[0], p);
+
+            return
+                (scalXY <= 0 && scalYZ <= 0 && scalZX <= 0) ||
+                (scalXY >= 0 && scalYZ >= 0 && scalZX >= 0);
+        }
     }
 }
