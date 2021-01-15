@@ -62,6 +62,38 @@ namespace GraphGenerator
             int keyCtr = 0;
 
 
+            // --- Compute convex hull and triangulate it. ---
+
+            int[] convHull = GetConvexHull(points);
+
+            // Allows to later check quickly if a point is part of the conv. hull or not.
+            HashSet<int> convHullSet = new HashSet<int>(convHull);
+
+            // Triangulate set.
+            for (int i = 2; i < convHull.Length; i++)
+            {
+                int orId = convHull[0];
+                int preId = convHull[i - 1];
+                int curId = convHull[i];
+
+                int preTriKey = i == 2 ? -1 : (keyCtr - 1);
+                int curTriKey = keyCtr;
+                int nexTriKey = (i + 1 < convHull.Length) ? (keyCtr + 1) : -1;
+                keyCtr++;
+
+                int[] triIds = new int[] { orId, preId, curId };
+                int[] neiKys = new int[]
+                {
+                    preTriKey /* previous */,
+                    -1 /* outside */,
+                    nexTriKey /* next */
+                };
+
+                triList.Add(curTriKey, triIds);
+                triNeig.Add(curTriKey, neiKys);
+            }
+
+
             int size = points.Length;
             Graph g = new Graph(size);
 
@@ -222,7 +254,7 @@ namespace GraphGenerator
                 int iId = ids[i];
 
                 // Pop points from stack until P_2 -- P_1 -- P_i forms a left turn.
-                for (Vector ptI = points[iId]; ; )
+                for (Vector ptI = points[iId]; ;)
                 {
                     int min1Id = chStack[chStack.Count - 1];
                     int min2Id = chStack[chStack.Count - 2];
