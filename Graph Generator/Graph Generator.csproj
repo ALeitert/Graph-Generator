@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Classes\Geometry.cs" />
     <Compile Include="Classes\Graph.cs" />
+    <Compile Include="Classes\TriData.cs" />
     <Compile Include="Classes\Vector.cs" />
     <Compile Include="Controls\GraphControl.cs">
       <SubType>UserControl</SubType>
