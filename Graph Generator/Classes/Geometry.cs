@@ -23,8 +23,45 @@ namespace GraphGenerator
             return points;
         }
 
+        /// <summary>
+        /// Computes a Delaunay triangulation for the given set of points.
+        /// </summary>
         public static Graph Triangulate(Vector[] points)
         {
+            // --- Triangles and their Neighbourhoods. ---
+
+            // Terminology:
+            //  An *ID* is the index of an entry in points[].
+            //  A *key* a non-negative int that identifies a triangle.
+            //  If a triangle gets deleted, its key will not be used again.
+
+            // A triangle is represented by an int-array of size 3.
+            // Each entry is the ID of a point of the triangle.
+            // They are in counter-clockwise order.
+
+            // The neighbourhood of a triangle is represented by an int-array of size 3.
+            // Each entry is the key of a neighbouring triangle.
+            // Neighbours are in counter-clockwise order and corolate with the order of point-ID.
+            // That is, the first neighbour shares the first and second point with the current triangle.
+            // A negative entry in the neighbourhood states that the triangle has no neighbour on that side.
+
+            //         P_2
+            //         / \
+            //    N_2 /   \  N_1
+            //       /     \
+            //      /       \
+            // P_0 ----------- P_1
+            //         N_0
+
+
+            // Dictionaries to store triangles and their neighbourhoods.
+            Dictionary<int, int[]> triList = new Dictionary<int, int[]>();
+            Dictionary<int, int[]> triNeig = new Dictionary<int, int[]>();
+
+            // Counter to ensure unique keys.
+            int keyCtr = 0;
+
+
             int size = points.Length;
             Graph g = new Graph(size);
 
