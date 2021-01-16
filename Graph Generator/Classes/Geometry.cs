@@ -167,8 +167,9 @@ namespace GraphGenerator
         /// If not, triangles will be flipped.
         /// Filipped triangles will also be checked.
         /// </summary>
-        public static void ChecksTriangles(TriData triData, ICollection<int> keysToCheck)
+        public static bool ChecksTriangles(TriData triData, ICollection<int> keysToCheck)
         {
+            bool flipped = false;
             Queue<int> q = new Queue<int>();
 
             foreach (int key in keysToCheck)
@@ -235,6 +236,10 @@ namespace GraphGenerator
                     {
                         // Dont flip.
                         continue;
+                    }
+                    else
+                    {
+                        flipped = true;
                     }
 
 
@@ -333,6 +338,8 @@ namespace GraphGenerator
                     break;
                 }
             }
+
+            return flipped;
         }
 
         /// <summary>
