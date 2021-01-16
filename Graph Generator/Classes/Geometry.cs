@@ -26,7 +26,7 @@ namespace GraphGenerator
         /// <summary>
         /// Computes a Delaunay triangulation for the given set of points.
         /// </summary>
-        public static Graph Triangulate(Vector[] points)
+        public static TriData Triangulate(Vector[] points)
         {
             // --- Triangles and their Neighbourhoods. ---
 
@@ -54,12 +54,8 @@ namespace GraphGenerator
             //         N_0
 
 
-            // Dictionaries to store triangles and their neighbourhoods.
-            Dictionary<int, int[]> triList = new Dictionary<int, int[]>();
-            Dictionary<int, int[]> triNeig = new Dictionary<int, int[]>();
-
-            // Counter to ensure unique keys.
-            int keyCtr = 0;
+            // Data structure to store triangles, their neighbourhoods, and to manage keys.
+            TriData triData = new TriData(points);
 
 
             // --- Compute convex hull and triangulate it. ---
@@ -76,30 +72,23 @@ namespace GraphGenerator
                 int preId = convHull[i - 1];
                 int curId = convHull[i];
 
-                int preTriKey = i == 2 ? -1 : (keyCtr - 1);
-                int curTriKey = keyCtr;
-                int nexTriKey = (i + 1 < convHull.Length) ? (keyCtr + 1) : -1;
-                keyCtr++;
-
                 int[] triIds = new int[] { orId, preId, curId };
-                int[] neiKys = new int[]
-                {
-                    preTriKey /* previous */,
-                    -1 /* outside */,
-                    nexTriKey /* next */
-                };
+                int[] neiKys = new int[3];
 
-                triList.Add(curTriKey, triIds);
-                triNeig.Add(curTriKey, neiKys);
+                int curKey = triData.Add(triIds, neiKys);
+
+                int preKey = i == 2 ? -1 : (curKey - 1);
+                int nexKey = (i + 1 < convHull.Length) ? (curKey + 1) : -1;
+
+                neiKys[0] = preKey; // previous
+                neiKys[1] = -1;     // outside
+                neiKys[2] = nexKey;  // next
             }
 
 
-            int size = points.Length;
-            Graph g = new Graph(size);
-
             // ToDo: Implement.
 
-            return g;
+            return triData;
         }
 
         /// <summary>
