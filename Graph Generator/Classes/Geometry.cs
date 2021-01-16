@@ -220,19 +220,12 @@ namespace GraphGenerator
                             ownTriIds[(ownJ + 1) % 3]
                     };
 
+                    Vector ptA = triData.Points[ownFarPt];
+                    Vector ptB = triData.Points[bothPts[0]];
+                    Vector ptC = triData.Points[bothPts[1]];
+                    Vector ptD = triData.Points[neiFarPt];
 
-                    double a1 = (triData.Points[ownFarPt] - triData.Points[bothPts[0]]).Length;
-                    double b1 = (triData.Points[ownFarPt] - triData.Points[bothPts[1]]).Length;
-
-                    double a2 = (triData.Points[neiFarPt] - triData.Points[bothPts[0]]).Length;
-                    double b2 = (triData.Points[neiFarPt] - triData.Points[bothPts[1]]).Length;
-
-                    double c = (triData.Points[bothPts[0]] - triData.Points[bothPts[1]]).Length;
-
-                    double ang1 = Math.Acos((a1 * a1 + b1 * b1 - c * c) / (2.0 * a1 * b1));
-                    double ang2 = Math.Acos((a2 * a2 + b2 * b2 - c * c) / (2.0 * a2 * b2));
-
-                    if (ang1 + ang2 <= Math.PI)
+                    if (CheckDelaunayCondition(ptA, ptB, ptC, ptD))
                     {
                         // Dont flip.
                         continue;
@@ -372,6 +365,25 @@ namespace GraphGenerator
             }
 
             return new int[] { keyL, keyR };
+        }
+
+        /// <summary>
+        /// Checks if two triangles which share two points (B and C) satisfy the Delaunay condition.
+        /// </summary>
+        private static bool CheckDelaunayCondition(Vector ptA, Vector ptB, Vector ptC, Vector ptD)
+        {
+            double ab = (ptA - ptB).Length;
+            double ac = (ptA - ptC).Length;
+
+            double db = (ptD - ptB).Length;
+            double dc = (ptD - ptC).Length;
+
+            double c = (ptB - ptC).Length;
+
+            double ang1 = Math.Acos((ab * ab + ac * ac - c * c) / (2.0 * ab * ac));
+            double ang2 = Math.Acos((db * db + dc * dc - c * c) / (2.0 * db * dc));
+
+            return ang1 + ang2 <= Math.PI;
         }
 
         /// <summary>
