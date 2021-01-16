@@ -237,109 +237,141 @@ namespace GraphGenerator
                         // Dont flip.
                         continue;
                     }
-                    else
-                    {
-                        flipped = true;
-                    }
 
-
-                    // --- Flip: Create new triangles. ---
-
-                    //          /|\
-                    //         / | \
-                    //        /  |  \
-                    //       /   |   \
-                    //  P_j <  L | R  >
-                    //       \   |   /
-                    //        \  |  /
-                    //         \ | / 
-                    //          \|/
-
-                    int[] newTriL = new int[]
-                    {
-                        bothPts[0],
-                        neiFarPt,
-                        ownFarPt
-                    };
-
-                    int[] newTriR = new int[]
-                    {
-                        bothPts[1],
-                        ownFarPt,
-                        neiFarPt
-                    };
-
-                    int[] newNeighL =
-                    {
-                        neiNeiKys[(neiJ + 0) % 3],
-                        -1, // will become keyR
-                        ownNeiKys[(ownJ + 2) % 3]
-                    };
-
-                    int[] newNeighR =
-                    {
-                        ownNeiKys[(ownJ + 1) % 3],
-                        -1, // will become keyL
-                        neiNeiKys[(neiJ + 1) % 3]
-                    };
-
-
-                    int keyL = triData.Add(newTriL, newNeighL);
-                    int keyR = triData.Add(newTriR, newNeighR);
-
-                    newNeighL[1] = keyR;
-                    newNeighR[1] = keyL;
-
-                    triData.Remove(ownKey);
-                    triData.Remove(neiKey);
-
-
-                    // --- Update neighbourhood of neighbours. ---
-
-                    // Own (j + 1) neighbour
-                    int nnInd = ownNeiKys[(ownJ + 1) % 3];
-                    if (nnInd >= 0)
-                    {
-                        int[] nN = triData[nnInd][1];
-                        int ind = Array.IndexOf(nN, ownKey);
-                        nN[ind] = keyR;
-                    }
-
-                    // Own (j + 2) neighbour
-                    nnInd = ownNeiKys[(ownJ + 2) % 3];
-                    if (nnInd >= 0)
-                    {
-                        int[] nN = triData[nnInd][1];
-                        int ind = Array.IndexOf(nN, ownKey);
-                        nN[ind] = keyL;
-                    }
-
-                    // Neighbours (j + 0) neighbour
-                    nnInd = neiNeiKys[(neiJ + 0) % 3];
-                    if (nnInd >= 0)
-                    {
-                        int[] nN = triData[nnInd][1];
-                        int ind = Array.IndexOf(nN, neiKey);
-                        nN[ind] = keyL;
-                    }
-
-                    // Neighbours (j + 1) neighbour
-                    nnInd = neiNeiKys[(neiJ + 1) % 3];
-                    if (nnInd >= 0)
-                    {
-                        int[] nN = triData[nnInd][1];
-                        int ind = Array.IndexOf(nN, neiKey);
-                        nN[ind] = keyR;
-                    }
+                    int[] newTris = FlipTriangle(triData, ownKey, ownJ);
+                    int keyL = newTris[0];
+                    int keyR = newTris[1];
 
                     q.Enqueue(keyL);
                     q.Enqueue(keyR);
 
+                    flipped = true;
                     break;
                 }
             }
 
             return flipped;
+        }
+
+        private static int[] FlipTriangle(TriData triData, int ownKey, int neiInd)
+        {
+            //          / \                     /|\
+            //     j+2 /   \ j+1               / | \
+            //        / own \                 /  |  \
+            //       /  j+0  \               /   |   \
+            //  P_j -----------    =>   P_j <  L | R  >
+            //       \  j+2  /               \   |   /
+            //        \ nei /                 \  |  /
+            //     j+0 \   / j+1               \ | / 
+            //          \ /                     \|/
+
+
+            // Data for own triangle.
+            int[][] ownInfo = triData[ownKey];
+            int[] ownTriIds = ownInfo[0];
+            int[] ownNeiKys = ownInfo[1];
+
+            // Data for neighbour.
+            int neiKey = ownNeiKys[neiInd];
+            if (neiKey < 0) return null;
+
+            int[][] neiInfo = triData[neiKey];
+            int[] neiTriIds = neiInfo[0];
+            int[] neiNeiKys = neiInfo[1];
+
+            int jId = ownTriIds[neiInd];
+
+            // Opposing point in current triangle is previous.
+            int ownFarPt = ownTriIds[(neiInd + 2) % 3];
+
+            // Opposing point in neighbour triangle is next.
+            int neiJ = Array.IndexOf(neiTriIds, jId);
+            int neiFarPt = neiTriIds[(neiJ + 1) % 3];
+
+            int[] bothPts = new int[]
+            {
+                jId,
+                ownTriIds[(neiInd + 1) % 3]
+            };
+
+            int[] newTriL = new int[]
+            {
+                bothPts[0],
+                neiFarPt,
+                ownFarPt
+            };
+
+            int[] newTriR = new int[]
+            {
+                bothPts[1],
+                ownFarPt,
+                neiFarPt
+            };
+
+            int[] newNeighL =
+            {
+                neiNeiKys[(neiJ + 0) % 3],
+                -1, // will become keyR
+                ownNeiKys[(neiInd + 2) % 3]
+            };
+
+            int[] newNeighR =
+            {
+                ownNeiKys[(neiInd + 1) % 3],
+                -1, // will become keyL
+                neiNeiKys[(neiJ + 1) % 3]
+            };
+
+
+            int keyL = triData.Add(newTriL, newNeighL);
+            int keyR = triData.Add(newTriR, newNeighR);
+
+            newNeighL[1] = keyR;
+            newNeighR[1] = keyL;
+
+            triData.Remove(ownKey);
+            triData.Remove(neiKey);
+
+
+            // --- Update neighbourhood of neighbours. ---
+
+            // Own (j + 1) neighbour
+            int nnInd = ownNeiKys[(neiInd + 1) % 3];
+            if (nnInd >= 0)
+            {
+                int[] nN = triData[nnInd][1];
+                int ind = Array.IndexOf(nN, ownKey);
+                nN[ind] = keyR;
+            }
+
+            // Own (j + 2) neighbour
+            nnInd = ownNeiKys[(neiInd + 2) % 3];
+            if (nnInd >= 0)
+            {
+                int[] nN = triData[nnInd][1];
+                int ind = Array.IndexOf(nN, ownKey);
+                nN[ind] = keyL;
+            }
+
+            // Neighbours (j + 0) neighbour
+            nnInd = neiNeiKys[(neiJ + 0) % 3];
+            if (nnInd >= 0)
+            {
+                int[] nN = triData[nnInd][1];
+                int ind = Array.IndexOf(nN, neiKey);
+                nN[ind] = keyL;
+            }
+
+            // Neighbours (j + 1) neighbour
+            nnInd = neiNeiKys[(neiJ + 1) % 3];
+            if (nnInd >= 0)
+            {
+                int[] nN = triData[nnInd][1];
+                int ind = Array.IndexOf(nN, neiKey);
+                nN[ind] = keyR;
+            }
+
+            return new int[] { keyL, keyR };
         }
 
         /// <summary>
