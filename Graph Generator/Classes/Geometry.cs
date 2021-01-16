@@ -82,11 +82,82 @@ namespace GraphGenerator
 
                 neiKys[0] = preKey; // previous
                 neiKys[1] = -1;     // outside
-                neiKys[2] = nexKey;  // next
+                neiKys[2] = nexKey; // next
             }
 
 
-            // ToDo: Implement.
+            // --- Iteratively add points the the triangulation. --
+
+            for (int i = 0; i < points.Length; i++)
+            {
+                if (convHullSet.Contains(i)) continue;
+                Vector pt = points[i];
+
+                // Find triangle containing point.
+                // (not efficient, but whatever)
+                int tKey = -1;
+                foreach (int key in triData.Keys)
+                {
+                    int[] triIds = triData[key][0];
+                    Vector[] triVecs = new Vector[]
+                    {
+                        points[triIds[0]],
+                        points[triIds[1]],
+                        points[triIds[2]]
+                    };
+
+                    if (Geometry.InTriangle(triVecs, pt))
+                    {
+                        tKey = key;
+                        break;
+                    }
+                }
+
+
+                // -- Split triangle into three. --
+
+                int[][] triInfo = triData[tKey];
+                int[] tri = triInfo[0];
+                int[] tNe = triInfo[1];
+
+                // Remove from list (swap with last).
+                triData.Remove(tKey);
+
+                // New triangles ...
+                int[] tri1 = new int[] { tri[0], tri[1], i };
+                int[] tri2 = new int[] { tri[1], tri[2], i };
+                int[] tri3 = new int[] { tri[2], tri[0], i };
+
+                // ... and their neighbourhoods.
+                int[] nei1 = new int[] { tNe[0], -1, -1 }; // will become nTKey2, nTKey3
+                int[] nei2 = new int[] { tNe[1], -1, -1 }; // will become nTKey3, nTKey1
+                int[] nei3 = new int[] { tNe[2], -1, -1 }; // will become nTKey1, nTKey2
+
+                int nTKey1 = triData.Add(tri1, nei1);
+                int nTKey2 = triData.Add(tri2, nei2);
+                int nTKey3 = triData.Add(tri3, nei3);
+
+                nei1[1] = nTKey2; nei1[2] = nTKey3;
+                nei2[1] = nTKey3; nei2[2] = nTKey1;
+                nei3[1] = nTKey1; nei3[2] = nTKey2;
+
+
+                // Update neighbourhoods of neighbours.
+                int[] newNeigKeys = new int[] { nTKey1, nTKey2, nTKey3 };
+
+                for (int j = 0; j < 3; j++)
+                {
+                    int nKey = tNe[j];
+                    if (nKey < 0) continue;
+
+                    int[] nN = triData[nKey][1];
+                    int ind = Array.IndexOf(nN, tKey);
+                    nN[ind] = newNeigKeys[j];
+                }
+
+                // Check created triangles. Flip if needed.
+                ChecksTriangles(triData, new int[] { nTKey1, nTKey2, nTKey3 });
+            }
 
             return triData;
         }
