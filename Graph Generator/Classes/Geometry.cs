@@ -92,6 +92,179 @@ namespace GraphGenerator
         }
 
         /// <summary>
+        /// Checks if the specified triangles satisfy the Delaunay condition with respect to their neighbours.
+        /// If not, triangles will be flipped.
+        /// Filipped triangles will also be checked.
+        /// </summary>
+        public static void ChecksTriangles(TriData triData, ICollection<int> keysToCheck)
+        {
+            Queue<int> q = new Queue<int>();
+
+            foreach (int key in keysToCheck)
+            {
+                q.Enqueue(key);
+            }
+
+            while (q.Count > 0)
+            {
+                int ownKey = q.Dequeue();
+                if (!triData.ContainsKey(ownKey)) continue;
+
+                int[][] ownInfo = triData[ownKey];
+                int[] ownTriIds = ownInfo[0];
+                int[] ownNeiKys = ownInfo[1];
+
+                for (int ownJ = 0; ownJ < 3; ownJ++)
+                {
+                    int neiKey = ownNeiKys[ownJ];
+                    if (neiKey < 0) continue;
+
+                    //          / \
+                    //     j+2 /   \ j+1
+                    //        / own \
+                    //       /  j+0  \
+                    //  P_j -----------
+                    //       \  j+2  /
+                    //        \ nei /
+                    //     j+0 \   / j+1 
+                    //          \ /
+
+                    int[][] neiInfo = triData[neiKey];
+                    int[] neiTriIds = neiInfo[0];
+                    int[] neiNeiKys = neiInfo[1];
+
+                    int jId = ownTriIds[ownJ];
+
+                    // Opposing point in current triangle is previous.
+                    int ownFarPt = ownTriIds[(ownJ + 2) % 3];
+
+                    // Opposing point in neighbour triangle is next.
+                    int neiJ = Array.IndexOf(neiTriIds, jId);
+                    int neiFarPt = neiTriIds[(neiJ + 1) % 3];
+
+                    int[] bothPts = new int[]
+                    {
+                            jId,
+                            ownTriIds[(ownJ + 1) % 3]
+                    };
+
+
+                    double a1 = (triData.Points[ownFarPt] - triData.Points[bothPts[0]]).Length;
+                    double b1 = (triData.Points[ownFarPt] - triData.Points[bothPts[1]]).Length;
+
+                    double a2 = (triData.Points[neiFarPt] - triData.Points[bothPts[0]]).Length;
+                    double b2 = (triData.Points[neiFarPt] - triData.Points[bothPts[1]]).Length;
+
+                    double c = (triData.Points[bothPts[0]] - triData.Points[bothPts[1]]).Length;
+
+                    double ang1 = Math.Acos((a1 * a1 + b1 * b1 - c * c) / (2.0 * a1 * b1));
+                    double ang2 = Math.Acos((a2 * a2 + b2 * b2 - c * c) / (2.0 * a2 * b2));
+
+                    if (ang1 + ang2 <= Math.PI)
+                    {
+                        // Dont flip.
+                        continue;
+                    }
+
+
+                    // --- Flip: Create new triangles. ---
+
+                    //          /|\
+                    //         / | \
+                    //        /  |  \
+                    //       /   |   \
+                    //  P_j <  L | R  >
+                    //       \   |   /
+                    //        \  |  /
+                    //         \ | / 
+                    //          \|/
+
+                    int[] newTriL = new int[]
+                    {
+                        bothPts[0],
+                        neiFarPt,
+                        ownFarPt
+                    };
+
+                    int[] newTriR = new int[]
+                    {
+                        bothPts[1],
+                        ownFarPt,
+                        neiFarPt
+                    };
+
+                    int[] newNeighL =
+                    {
+                        neiNeiKys[(neiJ + 0) % 3],
+                        -1, // will become keyR
+                        ownNeiKys[(ownJ + 2) % 3]
+                    };
+
+                    int[] newNeighR =
+                    {
+                        ownNeiKys[(ownJ + 1) % 3],
+                        -1, // will become keyL
+                        neiNeiKys[(neiJ + 1) % 3]
+                    };
+
+
+                    int keyL = triData.Add(newTriL, newNeighL);
+                    int keyR = triData.Add(newTriR, newNeighR);
+
+                    newNeighL[1] = keyR;
+                    newNeighR[1] = keyL;
+
+                    triData.Remove(ownKey);
+                    triData.Remove(neiKey);
+
+
+                    // --- Update neighbourhood of neighbours. ---
+
+                    // Own (j + 1) neighbour
+                    int nnInd = ownNeiKys[(ownJ + 1) % 3];
+                    if (nnInd >= 0)
+                    {
+                        int[] nN = triData[nnInd][1];
+                        int ind = Array.IndexOf(nN, ownKey);
+                        nN[ind] = keyR;
+                    }
+
+                    // Own (j + 2) neighbour
+                    nnInd = ownNeiKys[(ownJ + 2) % 3];
+                    if (nnInd >= 0)
+                    {
+                        int[] nN = triData[nnInd][1];
+                        int ind = Array.IndexOf(nN, ownKey);
+                        nN[ind] = keyL;
+                    }
+
+                    // Neighbours (j + 0) neighbour
+                    nnInd = neiNeiKys[(neiJ + 0) % 3];
+                    if (nnInd >= 0)
+                    {
+                        int[] nN = triData[nnInd][1];
+                        int ind = Array.IndexOf(nN, neiKey);
+                        nN[ind] = keyL;
+                    }
+
+                    // Neighbours (j + 1) neighbour
+                    nnInd = neiNeiKys[(neiJ + 1) % 3];
+                    if (nnInd >= 0)
+                    {
+                        int[] nN = triData[nnInd][1];
+                        int ind = Array.IndexOf(nN, neiKey);
+                        nN[ind] = keyR;
+                    }
+
+                    q.Enqueue(keyL);
+                    q.Enqueue(keyR);
+
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns a rectangle that sorounds the given points.
         /// </summary>
         public static RectangleF GetSurroundingRectangle(Vector[] points)
