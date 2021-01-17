@@ -114,6 +114,7 @@ namespace GraphGenerator
             this.mnuGenerateTriangulation.Name = "mnuGenerateTriangulation";
             this.mnuGenerateTriangulation.Size = new System.Drawing.Size(180, 22);
             this.mnuGenerateTriangulation.Text = "Triangulation";
+            this.mnuGenerateTriangulation.Click += new System.EventHandler(this.mnuGenerateTriangulation_Click);
             // 
             // toolStripSeparator1
             // 
