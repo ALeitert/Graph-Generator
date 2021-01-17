@@ -71,26 +71,6 @@ namespace GraphGenerator
         }
 
 
-        private Vector[] GenerateStartPoints()
-        {
-            Random rng = new Random();
-            Vector[] startPos = new Vector[Size];
-
-            // Vertices will be placed randomly in a square of length 2 sqrt(n).
-            double sqrLen = 2.0 * Math.Sqrt(Size);
-
-            for (int vId = 0; vId < Size; vId++)
-            {
-                startPos[vId] = new Vector
-                (
-                    rng.NextDouble() * sqrLen,
-                    rng.NextDouble() * sqrLen
-                );
-            }
-
-            return startPos;
-        }
-
         /// <summary>
         /// "Draws" the graph with a force-based approach and returns the computed coordinates.
         /// </summary>
@@ -104,9 +84,11 @@ namespace GraphGenerator
         /// </summary>
         public Vector[] Draw(Vector[] points)
         {
-            if (points == null)
+            if (points == null || points.Length != Size)
             {
-                points = GenerateStartPoints();
+                // Vertices will be placed randomly in a square of length 2 sqrt(n).
+                double sqrLen = 2.0 * Math.Sqrt(Size);
+                points = Geometry.GetRandomPoints(Size, sqrLen, sqrLen);
             }
 
 

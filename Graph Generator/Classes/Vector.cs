@@ -50,6 +50,16 @@ namespace GraphGenerator
             return new Vector(v.X * m, v.Y * m);
         }
 
+        public static bool operator ==(Vector v1, Vector v2)
+        {
+            return v1.X == v2.X && v1.Y == v2.Y;
+        }
+
+        public static bool operator !=(Vector v1, Vector v2)
+        {
+            return v1.X != v2.X || v1.Y != v2.Y;
+        }
+
         public Vector Normalize()
         {
             if (Length == 0) return this;
