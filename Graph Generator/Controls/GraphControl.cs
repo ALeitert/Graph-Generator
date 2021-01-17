@@ -195,8 +195,6 @@ namespace GraphGenerator
 
                 editMode = EditMode.None;
                 pnlCanves.ContextMenuStrip = mnuContext;
-
-                if (AutoDraw) StartDrawing();
             }
         }
 
@@ -217,21 +215,18 @@ namespace GraphGenerator
                 }
                 else
                 {
-                    drawing = null; 
+                    drawing = null;
                 }
 
-                drawingTimer.Stop();
                 Refresh();
             }
         }
-
-        public bool AutoDraw { get; set; } = true;
 
         /// <summary>
         /// Starts the process of drawing the graph.
         /// The graph will be redrawn for a few seconds.
         /// </summary>
-        private void StartDrawing()
+        public void StartDrawing()
         {
             drawingTime = Environment.TickCount;
             drawingTimer.Start();

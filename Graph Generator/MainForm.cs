@@ -44,6 +44,7 @@ namespace GraphGenerator
             lblSeed.Text = string.Format("Seed = {0}", seed);
 
             graphControl.Graph = Graph.NewRandom(size, eCount, seed);
+            graphControl.StartDrawing();
         }
     }
 }
