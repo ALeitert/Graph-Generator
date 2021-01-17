@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Media;
 using System.Windows.Forms;
 
@@ -13,8 +11,7 @@ namespace GraphGenerator
             InitializeComponent();
         }
 
-
-        private void btnGenerate_Click(object sender, EventArgs e)
+        private void mnuGenerateRandom_Click(object sender, EventArgs e)
         {
             int size = 0;
             int eCount = 0;
