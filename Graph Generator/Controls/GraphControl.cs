@@ -7,6 +7,12 @@ namespace GraphGenerator
 {
     public partial class GraphControl : UserControl
     {
+        public enum GraphDrawMode
+        {
+            Force,
+            ConvHullForce
+        }
+
         private enum EditMode
         {
             None,
@@ -221,6 +227,8 @@ namespace GraphGenerator
                 Refresh();
             }
         }
+
+        public GraphDrawMode DrawMode { get; set; } = GraphDrawMode.Force;
 
         /// <summary>
         /// Starts the process of drawing the graph.
