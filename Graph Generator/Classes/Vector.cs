@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace GraphGenerator
 {
-    public struct Vector
+    public struct Vector : IComparable<Vector>
     {
         public Vector(PointF p)
         {
@@ -72,5 +72,11 @@ namespace GraphGenerator
             return new PointF(Convert.ToSingle(X), Convert.ToSingle(Y));
         }
 
+        int IComparable<Vector>.CompareTo(Vector other)
+        {
+            int comp = this.X.CompareTo(other.X);
+            if (comp != 0) return comp;
+            return this.Y.CompareTo(other.Y);
+        }
     }
 }
