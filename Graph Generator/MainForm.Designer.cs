@@ -35,7 +35,7 @@ namespace GraphGenerator
             this.txtV = new System.Windows.Forms.ToolStripTextBox();
             this.lblE = new System.Windows.Forms.ToolStripLabel();
             this.txtE = new System.Windows.Forms.ToolStripTextBox();
-            this.btnGenerate = new System.Windows.Forms.ToolStripDropDownButton();
+            this.btnGenerate = new System.Windows.Forms.ToolStripSplitButton();
             this.mnuGenerateRandom = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuGenerateTriangulation = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
@@ -99,8 +99,9 @@ namespace GraphGenerator
             this.btnGenerate.Image = ((System.Drawing.Image)(resources.GetObject("btnGenerate.Image")));
             this.btnGenerate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnGenerate.Name = "btnGenerate";
-            this.btnGenerate.Size = new System.Drawing.Size(67, 22);
+            this.btnGenerate.Size = new System.Drawing.Size(70, 22);
             this.btnGenerate.Text = "Generate";
+            this.btnGenerate.ButtonClick += new System.EventHandler(this.btnGenerate_ButtonClick);
             // 
             // mnuGenerateRandom
             // 
@@ -184,7 +185,7 @@ namespace GraphGenerator
         private System.Windows.Forms.ToolStripLabel lblSeed;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private GraphControl graphControl;
-        private System.Windows.Forms.ToolStripDropDownButton btnGenerate;
+        private System.Windows.Forms.ToolStripSplitButton btnGenerate;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerateRandom;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerateTriangulation;
     }

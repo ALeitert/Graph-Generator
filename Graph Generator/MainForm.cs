@@ -11,8 +11,17 @@ namespace GraphGenerator
             InitializeComponent();
         }
 
+        EventHandler lastgenerate = null;
+
+        private void btnGenerate_ButtonClick(object sender, EventArgs e)
+        {
+            lastgenerate?.Invoke(sender, e);
+        }
+
         private void mnuGenerateRandom_Click(object sender, EventArgs e)
         {
+            lastgenerate = mnuGenerateRandom_Click;
+
             int size = 0;
             int eCount = 0;
 
@@ -49,6 +58,8 @@ namespace GraphGenerator
 
         private void mnuGenerateTriangulation_Click(object sender, EventArgs e)
         {
+            lastgenerate = mnuGenerateTriangulation_Click;
+
             int size = 0;
 
 
