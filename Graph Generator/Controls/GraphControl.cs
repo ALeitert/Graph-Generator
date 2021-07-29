@@ -176,6 +176,21 @@ namespace GraphGenerator
             fromVerId = mouseVerId;
         }
 
+        private void mnuVertexCenter_Click(object sender, EventArgs e)
+        {
+            drawingTimer.Stop();
+            int vId = mouseVerId;
+            Vector sum = new Vector();
+
+            foreach (int uId in graph[vId])
+            {
+                sum += drawing[uId];
+            }
+
+            drawing[vId] = sum / graph[vId].Count;
+            Refresh();
+        }
+
 
         private Graph graph = null;
         private Vector[] drawing = null;

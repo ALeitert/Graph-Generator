@@ -34,12 +34,13 @@ namespace GraphGenerator
             this.mnuContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuVertex = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuVertexAddEdge = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuVertexRemoveEdge = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuDraw = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDrawForce = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDrawConvHullForce = new System.Windows.Forms.ToolStripMenuItem();
             this.drawingTimer = new System.Windows.Forms.Timer(this.components);
-            this.mnuVertexRemoveEdge = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuVertexCenter = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContext.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -65,16 +66,17 @@ namespace GraphGenerator
             this.toolStripMenuItem1,
             this.mnuDraw});
             this.mnuContext.Name = "mnuContext";
-            this.mnuContext.Size = new System.Drawing.Size(181, 76);
+            this.mnuContext.Size = new System.Drawing.Size(107, 54);
             this.mnuContext.Opening += new System.ComponentModel.CancelEventHandler(this.mnuContext_Opening);
             // 
             // mnuVertex
             // 
             this.mnuVertex.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuVertexAddEdge,
-            this.mnuVertexRemoveEdge});
+            this.mnuVertexRemoveEdge,
+            this.mnuVertexCenter});
             this.mnuVertex.Name = "mnuVertex";
-            this.mnuVertex.Size = new System.Drawing.Size(180, 22);
+            this.mnuVertex.Size = new System.Drawing.Size(106, 22);
             this.mnuVertex.Text = "Vertex";
             // 
             // mnuVertexAddEdge
@@ -84,10 +86,17 @@ namespace GraphGenerator
             this.mnuVertexAddEdge.Text = "Add edge";
             this.mnuVertexAddEdge.Click += new System.EventHandler(this.mnuVertexAddEdge_Click);
             // 
+            // mnuVertexRemoveEdge
+            // 
+            this.mnuVertexRemoveEdge.Name = "mnuVertexRemoveEdge";
+            this.mnuVertexRemoveEdge.Size = new System.Drawing.Size(180, 22);
+            this.mnuVertexRemoveEdge.Text = "Remove edge";
+            this.mnuVertexRemoveEdge.Click += new System.EventHandler(this.mnuVertexRemoveEdge_Click);
+            // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(177, 6);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(103, 6);
             // 
             // mnuDraw
             // 
@@ -116,12 +125,12 @@ namespace GraphGenerator
             // 
             this.drawingTimer.Tick += new System.EventHandler(this.drawingTimer_Tick);
             // 
-            // mnuVertexRemoveEdge
+            // mnuVertexCenter
             // 
-            this.mnuVertexRemoveEdge.Name = "mnuVertexRemoveEdge";
-            this.mnuVertexRemoveEdge.Size = new System.Drawing.Size(180, 22);
-            this.mnuVertexRemoveEdge.Text = "Remove edge";
-            this.mnuVertexRemoveEdge.Click += new System.EventHandler(this.mnuVertexRemoveEdge_Click);
+            this.mnuVertexCenter.Name = "mnuVertexCenter";
+            this.mnuVertexCenter.Size = new System.Drawing.Size(180, 22);
+            this.mnuVertexCenter.Text = "Center";
+            this.mnuVertexCenter.Click += new System.EventHandler(this.mnuVertexCenter_Click);
             // 
             // GraphControl
             // 
@@ -147,5 +156,6 @@ namespace GraphGenerator
         private System.Windows.Forms.ToolStripMenuItem mnuVertexRemoveEdge;
         private System.Windows.Forms.ToolStripMenuItem mnuDrawForce;
         private System.Windows.Forms.ToolStripMenuItem mnuDrawConvHullForce;
+        private System.Windows.Forms.ToolStripMenuItem mnuVertexCenter;
     }
 }
