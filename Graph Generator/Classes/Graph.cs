@@ -84,12 +84,73 @@ namespace GraphGenerator
         /// </summary>
         public Vector[] Draw(Vector[] points)
         {
-            if (points == null || points.Length != Size)
+            Vector[] forces = new Vector[Size];
+
+            // Parameters for drawing.
+            // No idea which does what but they seem to work well.
+
+            double d0 = 7;
+            double lf = 5;
+            double kg = 0.5 * d0 * d0;
+            double kf = 0.5 / (d0 - lf);
+
+            const double forceSpeed = 0.05;
+            const int iterations = 100;
+
+
+            for (int i = 0; i < iterations; i++)
             {
-                // Vertices will be placed randomly in a square of length 2 sqrt(n).
-                double sqrLen = 2.0 * Math.Sqrt(Size);
-                points = Geometry.GetRandomPoints(Size, sqrLen, sqrLen);
+                // Compute forces on each vertex.
+                for (int vId = 0; vId < Size; vId++)
+                {
+                    Vector vecV = points[vId];
+                    forces[vId] = new Vector(0, 0);
+
+                    for (int uId = 0; uId < Size; uId++)
+                    {
+                        if (uId == vId) continue;
+
+                        Vector vecU = points[uId];
+
+                        Vector vecUV = vecV - vecU;
+                        Vector dirUV = vecUV.Normalize();
+
+                        double disUV = vecUV.Length;
+
+                        double g = kg / Math.Pow(disUV, 2);
+
+                        if (adjList[vId].Contains(uId))
+                        {
+                            double f = kf * (disUV - lf);
+                            forces[vId] += dirUV * (g - f);
+                        }
+                        else
+                        {
+                            forces[vId] += dirUV * g;
+                        }
+                    }
+                }
+
+                // Apply forces.
+                for (int vId = 0; vId < Size; vId++)
+                {
+                    Vector vFor = forces[vId];
+                    double dis = vFor.Length;
+                    points[vId] += forceSpeed * dis * vFor.Normalize();
+                }
             }
+
+
+            return points;
+        }
+
+        /// <summary>
+        /// "Draws" the graph with a force-based approach aided by the convex hull and returns the computed coordinates.
+        /// </summary>
+        public Vector[] DrawCH(Vector[] points)
+        {
+            int[] chIds = Geometry.GetConvexHull(points);
+            HashSet<int> conHull = new HashSet<int>(chIds);
 
 
             // --- Draw the graph. ---
@@ -134,7 +195,7 @@ namespace GraphGenerator
                             double f = kf * (disUV - lf);
                             forces[vId] += dirUV * (g - f);
                         }
-                        else
+                        else if (conHull.Contains(vId))
                         {
                             forces[vId] += vecUV * g;
                         }
@@ -144,14 +205,12 @@ namespace GraphGenerator
                 // Apply forces.
                 for (int vId = 0; vId < Size; vId++)
                 {
-                    Vector vFor = forces[vId];
-                    double dis = vFor.Length;
-                    points[vId] += forceSpeed * dis * vFor.Normalize();
+                    points[vId] += forceSpeed * forces[vId];
                 }
             }
 
-
             return points;
         }
+
     }
 }

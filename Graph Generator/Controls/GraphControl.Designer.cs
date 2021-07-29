@@ -36,6 +36,8 @@ namespace GraphGenerator
             this.mnuVertexAddEdge = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripSeparator();
             this.mnuDraw = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDrawForce = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDrawConvHullForce = new System.Windows.Forms.ToolStripMenuItem();
             this.drawingTimer = new System.Windows.Forms.Timer(this.components);
             this.mnuVertexRemoveEdge = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuContext.SuspendLayout();
@@ -89,10 +91,26 @@ namespace GraphGenerator
             // 
             // mnuDraw
             // 
+            this.mnuDraw.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDrawForce,
+            this.mnuDrawConvHullForce});
             this.mnuDraw.Name = "mnuDraw";
-            this.mnuDraw.Size = new System.Drawing.Size(180, 22);
+            this.mnuDraw.Size = new System.Drawing.Size(106, 22);
             this.mnuDraw.Text = "Draw";
-            this.mnuDraw.Click += new System.EventHandler(this.mnuDraw_Click);
+            // 
+            // mnuDrawForce
+            // 
+            this.mnuDrawForce.Name = "mnuDrawForce";
+            this.mnuDrawForce.Size = new System.Drawing.Size(180, 22);
+            this.mnuDrawForce.Text = "Force";
+            this.mnuDrawForce.Click += new System.EventHandler(this.mnuDrawForce_Click);
+            // 
+            // mnuDrawConvHullForce
+            // 
+            this.mnuDrawConvHullForce.Name = "mnuDrawConvHullForce";
+            this.mnuDrawConvHullForce.Size = new System.Drawing.Size(180, 22);
+            this.mnuDrawConvHullForce.Text = "Convex Hull Force";
+            this.mnuDrawConvHullForce.Click += new System.EventHandler(this.mnuDrawConvHullForce_Click);
             // 
             // drawingTimer
             // 
@@ -127,5 +145,7 @@ namespace GraphGenerator
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mnuDraw;
         private System.Windows.Forms.ToolStripMenuItem mnuVertexRemoveEdge;
+        private System.Windows.Forms.ToolStripMenuItem mnuDrawForce;
+        private System.Windows.Forms.ToolStripMenuItem mnuDrawConvHullForce;
     }
 }

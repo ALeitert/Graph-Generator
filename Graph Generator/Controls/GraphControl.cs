@@ -7,6 +7,12 @@ namespace GraphGenerator
 {
     public partial class GraphControl : UserControl
     {
+        public enum GraphDrawMode
+        {
+            Force,
+            ConvHullForce
+        }
+
         private enum EditMode
         {
             None,
@@ -146,8 +152,15 @@ namespace GraphGenerator
             canMoveVertex = false;
         }
 
-        private void mnuDraw_Click(object sender, EventArgs e)
+        private void mnuDrawForce_Click(object sender, EventArgs e)
         {
+            DrawMode = GraphDrawMode.Force;
+            StartDrawing();
+        }
+
+        private void mnuDrawConvHullForce_Click(object sender, EventArgs e)
+        {
+            DrawMode = GraphDrawMode.ConvHullForce;
             StartDrawing();
         }
 
@@ -222,6 +235,8 @@ namespace GraphGenerator
             }
         }
 
+        public GraphDrawMode DrawMode { get; set; } = GraphDrawMode.Force;
+
         /// <summary>
         /// Starts the process of drawing the graph.
         /// The graph will be redrawn for a few seconds.
@@ -243,7 +258,24 @@ namespace GraphGenerator
                 return;
             }
 
-            drawing = graph.Draw(drawing);
+            if (drawing == null || drawing.Length != graph.Size)
+            {
+                // Vertices will be placed randomly in a square of length 2 sqrt(n).
+                double sqrLen = 2.0 * Math.Sqrt(graph.Size);
+                drawing = Geometry.GetRandomPoints(graph.Size, sqrLen, sqrLen);
+            }
+
+            switch (DrawMode)
+            {
+                case GraphDrawMode.Force:
+                    drawing = graph.Draw(drawing);
+                    break;
+
+                case GraphDrawMode.ConvHullForce:
+                    drawing = graph.DrawCH(drawing);
+                    break;
+
+            }
 
             CenterGraph();
             UpddateCanvasScale();
