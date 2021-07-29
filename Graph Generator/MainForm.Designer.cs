@@ -38,6 +38,7 @@ namespace GraphGenerator
             this.btnGenerate = new System.Windows.Forms.ToolStripSplitButton();
             this.mnuGenerateRandom = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuGenerateTriangulation = new System.Windows.Forms.ToolStripMenuItem();
+            this.planarToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.lblSeed = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -97,7 +98,8 @@ namespace GraphGenerator
             this.btnGenerate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.btnGenerate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuGenerateRandom,
-            this.mnuGenerateTriangulation});
+            this.mnuGenerateTriangulation,
+            this.planarToolStripMenuItem});
             this.btnGenerate.Image = ((System.Drawing.Image)(resources.GetObject("btnGenerate.Image")));
             this.btnGenerate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnGenerate.Name = "btnGenerate";
@@ -118,6 +120,13 @@ namespace GraphGenerator
             this.mnuGenerateTriangulation.Size = new System.Drawing.Size(180, 22);
             this.mnuGenerateTriangulation.Text = "Triangulation";
             this.mnuGenerateTriangulation.Click += new System.EventHandler(this.mnuGenerateTriangulation_Click);
+            // 
+            // planarToolStripMenuItem
+            // 
+            this.planarToolStripMenuItem.Name = "planarToolStripMenuItem";
+            this.planarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.planarToolStripMenuItem.Text = "Planar";
+            this.planarToolStripMenuItem.Click += new System.EventHandler(this.planarToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
@@ -201,6 +210,7 @@ namespace GraphGenerator
         private System.Windows.Forms.ToolStripSplitButton btnGenerate;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerateRandom;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerateTriangulation;
+        private System.Windows.Forms.ToolStripMenuItem planarToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btnTikzExport;
     }
 }

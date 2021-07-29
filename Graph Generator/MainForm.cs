@@ -130,6 +130,81 @@ namespace GraphGenerator
             graphControl.Drawing = drawing;
         }
 
+        private void planarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            lastgenerate = planarToolStripMenuItem_Click;
+            int size = 0;
+
+
+            // --- Check input. --
+
+            if (!int.TryParse(txtV.Text, out size))
+            {
+                SystemSounds.Exclamation.Play();
+                return;
+            }
+
+            if (size <= 0)
+            {
+                SystemSounds.Exclamation.Play();
+                return;
+            }
+
+
+            Random rng = new Random();
+
+            int seed = rng.Next(5000);
+            rng = new Random(seed);
+            lblSeed.Text = string.Format("Seed = {0}", seed);
+
+            Vector[] pointList = Geometry.GetRandomPoints(size, 2, 2);
+            Array.Sort(pointList);
+
+            Graph g = new Graph(size);
+
+
+            // --- Determine edges. ---
+
+            for (int x = 0; x < pointList.Length; x++)
+            {
+                Vector xPt = pointList[x];
+
+                for (int y = x + 1; y < pointList.Length; y++)
+                {
+                    Vector yPt = pointList[y];
+                    Vector cPt = new Vector((xPt.X + yPt.X) / 2F, (xPt.Y + yPt.Y) / 2F);
+
+                    double rad = (xPt.X - cPt.X) * (xPt.X - cPt.X) + (xPt.Y - cPt.Y) * (xPt.Y - cPt.Y);
+                    bool addEdge = true;
+
+                    for (int z = 0; z < pointList.Length; z++)
+                    {
+                        if (z == x || z == y) continue;
+
+                        Vector zPt = pointList[z];
+
+                        double dist = (zPt.X - cPt.X) * (zPt.X - cPt.X) + (zPt.Y - cPt.Y) * (zPt.Y - cPt.Y);
+
+                        if (dist < rad)
+                        {
+                            addEdge = false;
+                            break;
+                        }
+                    }
+
+                    if (addEdge)
+                    {
+                        g[x].Add(y);
+                        g[y].Add(x);
+                    }
+                }
+            }
+
+
+            graphControl.Graph = g;
+            graphControl.Drawing = pointList;
+        }
+
         private void btnTikzExport_Click(object sender, EventArgs e)
         {
             const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
