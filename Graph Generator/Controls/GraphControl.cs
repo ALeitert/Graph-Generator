@@ -391,6 +391,12 @@ namespace GraphGenerator
             bool canAddEdge = CanAddEdge(fromVerId, mouseVerId);
             bool canRemEdge = CanRemoveEdge(fromVerId, mouseVerId);
 
+            // Higlight vertex with index 0. That vertex is the root of a layering partition.
+            {
+                PointF ptV = (drawing[0] * scale).ToPointF();
+                g.FillEllipse(Brushes.Orange, ptV.X - mRad, ptV.Y - mRad, mDia, mDia);
+            }
+
 
             // --- Draw highlighting for vertex under mouse. ---
 
