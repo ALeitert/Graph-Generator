@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Media;
 using System.Windows.Forms;
 
@@ -98,9 +99,32 @@ namespace GraphGenerator
                 g[tri[2]].Add(tri[1]);
             }
 
+
+            // --- Center vertices between their neighbours. ---
+            // (Leads to more evenly sized triangles.)
+
+            HashSet<int> convHullSet = new HashSet<int>(Geometry.GetConvexHull(drawing));
+
+            for (int i = 0; i < 100; i++)
+            {
+                for (int vId = 0; vId < size; vId++)
+                {
+                    if (convHullSet.Contains(vId)) continue;
+
+                    Vector sum = new Vector();
+
+                    foreach (int uId in g[vId])
+                    {
+                        sum += drawing[uId];
+                    }
+
+                    drawing[vId] = sum / g[vId].Count;
+                }
+            }
+
+
             graphControl.Graph = g;
             graphControl.Drawing = drawing;
-            graphControl.StartDrawing();
         }
     }
 }
