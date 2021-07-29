@@ -126,7 +126,7 @@ namespace GraphGenerator
                         }
                         else
                         {
-                            forces[vId] += vecUV * g;
+                            forces[vId] += dirUV * g;
                         }
                     }
                 }
