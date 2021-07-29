@@ -362,6 +362,7 @@ namespace GraphGenerator
             g.SmoothingMode = SmoothingMode.HighQuality;
 
             const float PenWidth = 1F;
+            const float ThinPenWidth = 0.5F;
             const float ThickPenWidth = 3F;
 
             Pen blackPen = new Pen(Color.Black, PenWidth);
@@ -469,6 +470,13 @@ namespace GraphGenerator
             for (int vId = 0; vId < graph.Size; vId++)
             {
                 PointF ptV = (drawing[vId] * scale).ToPointF();
+
+                if (graph[vId].Count % 2 != 0)
+                {
+                    Pen redPen = new Pen(Color.Red, ThinPenWidth);
+                    g.DrawEllipse(redPen, ptV.X - 2f * vRad, ptV.Y - mRad, mDia, mDia);
+                }
+
                 g.FillEllipse(Brushes.DarkGreen, ptV.X - vRad, ptV.Y - vRad, vDia, vDia);
             }
         }
