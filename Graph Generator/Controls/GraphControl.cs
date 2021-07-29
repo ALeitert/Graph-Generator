@@ -152,8 +152,15 @@ namespace GraphGenerator
             canMoveVertex = false;
         }
 
-        private void mnuDraw_Click(object sender, EventArgs e)
+        private void mnuDrawForce_Click(object sender, EventArgs e)
         {
+            DrawMode = GraphDrawMode.Force;
+            StartDrawing();
+        }
+
+        private void mnuDrawConvHullForce_Click(object sender, EventArgs e)
+        {
+            DrawMode = GraphDrawMode.ConvHullForce;
             StartDrawing();
         }
 
