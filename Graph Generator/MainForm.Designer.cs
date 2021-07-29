@@ -45,6 +45,7 @@ namespace GraphGenerator
             this.btnTikzExport = new System.Windows.Forms.ToolStripButton();
             this.pnlToolBar = new System.Windows.Forms.Panel();
             this.graphControl = new GraphGenerator.GraphControl();
+            this.mnuGenerateLayPart = new System.Windows.Forms.ToolStripMenuItem();
             this.mainToolBar.SuspendLayout();
             this.pnlToolBar.SuspendLayout();
             this.SuspendLayout();
@@ -99,7 +100,8 @@ namespace GraphGenerator
             this.btnGenerate.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuGenerateRandom,
             this.mnuGenerateTriangulation,
-            this.planarToolStripMenuItem});
+            this.planarToolStripMenuItem,
+            this.mnuGenerateLayPart});
             this.btnGenerate.Image = ((System.Drawing.Image)(resources.GetObject("btnGenerate.Image")));
             this.btnGenerate.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnGenerate.Name = "btnGenerate";
@@ -178,6 +180,13 @@ namespace GraphGenerator
             this.graphControl.Size = new System.Drawing.Size(776, 395);
             this.graphControl.TabIndex = 4;
             // 
+            // mnuGenerateLayPart
+            // 
+            this.mnuGenerateLayPart.Name = "mnuGenerateLayPart";
+            this.mnuGenerateLayPart.Size = new System.Drawing.Size(180, 22);
+            this.mnuGenerateLayPart.Text = "Layering Partition";
+            this.mnuGenerateLayPart.Click += new System.EventHandler(this.mnuGenerateLayPart_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -212,5 +221,6 @@ namespace GraphGenerator
         private System.Windows.Forms.ToolStripMenuItem mnuGenerateTriangulation;
         private System.Windows.Forms.ToolStripMenuItem planarToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton btnTikzExport;
+        private System.Windows.Forms.ToolStripMenuItem mnuGenerateLayPart;
     }
 }

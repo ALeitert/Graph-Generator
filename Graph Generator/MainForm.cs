@@ -286,5 +286,71 @@ namespace GraphGenerator
             txt.Text = sb.ToString();
             f.Show();
         }
+
+        private void mnuGenerateLayPart_Click(object sender, EventArgs e)
+        {
+            lastgenerate = mnuGenerateLayPart_Click;
+
+            // --- Make tree --
+
+            int tSize = 6;
+            int gSize = 15;
+
+            int seed = new Random().Next(5000);
+            lblSeed.Text = string.Format("Seed = {0}", seed);
+            Random rng = new Random(seed);
+
+            int[] tree = new int[tSize];
+
+            for (int i = 1; i < tSize; i++)
+            {
+                tree[i] = rng.Next(i);
+            }
+
+
+            // --- Generate clusters based on tree. ---
+
+            Graph g = new Graph(gSize);
+
+            List<int>[] culsters = new List<int>[tSize];
+
+            for (int i = 0; i < tSize; i++)
+            {
+                culsters[i] = new List<int>();
+                culsters[i].Add(i);
+
+                if (i == 0) continue;
+
+                int par = tree[i];
+                g[i].Add(par);
+                g[par].Add(i);
+            }
+
+
+            // --- Add remaining vertices to random clusters. --- 
+
+            for (int i = tSize; i < gSize; i++)
+            {
+                int cl = rng.Next(tSize - 1) + 1;
+                culsters[cl].Add(i);
+
+                int pre = culsters[cl][culsters[cl].Count - 2];
+                g[i].Add(pre);
+                g[pre].Add(i);
+
+
+                int pCl = tree[cl];
+
+                foreach (int j in culsters[pCl])
+                {
+                    g[i].Add(j);
+                    g[j].Add(i);
+                }
+            }
+
+
+            graphControl.Graph = g;
+            graphControl.StartDrawing();
+        }
     }
 }
