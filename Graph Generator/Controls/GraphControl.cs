@@ -251,7 +251,24 @@ namespace GraphGenerator
                 return;
             }
 
-            drawing = graph.Draw(drawing);
+            if (drawing == null || drawing.Length != graph.Size)
+            {
+                // Vertices will be placed randomly in a square of length 2 sqrt(n).
+                double sqrLen = 2.0 * Math.Sqrt(graph.Size);
+                drawing = Geometry.GetRandomPoints(graph.Size, sqrLen, sqrLen);
+            }
+
+            switch (DrawMode)
+            {
+                case GraphDrawMode.Force:
+                    drawing = graph.Draw(drawing);
+                    break;
+
+                case GraphDrawMode.ConvHullForce:
+                    drawing = graph.DrawCH(drawing);
+                    break;
+
+            }
 
             CenterGraph();
             UpddateCanvasScale();

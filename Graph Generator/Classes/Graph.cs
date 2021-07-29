@@ -84,16 +84,6 @@ namespace GraphGenerator
         /// </summary>
         public Vector[] Draw(Vector[] points)
         {
-            if (points == null || points.Length != Size)
-            {
-                // Vertices will be placed randomly in a square of length 2 sqrt(n).
-                double sqrLen = 2.0 * Math.Sqrt(Size);
-                points = Geometry.GetRandomPoints(Size, sqrLen, sqrLen);
-            }
-
-
-            // --- Draw the graph. ---
-
             Vector[] forces = new Vector[Size];
 
             // Parameters for drawing.
