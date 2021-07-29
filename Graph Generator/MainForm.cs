@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
 using System.Media;
+using System.Text;
 using System.Windows.Forms;
 
 namespace GraphGenerator
@@ -125,6 +128,88 @@ namespace GraphGenerator
 
             graphControl.Graph = g;
             graphControl.Drawing = drawing;
+        }
+
+        private void btnTikzExport_Click(object sender, EventArgs e)
+        {
+            const string letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            CultureInfo engCI = new CultureInfo("en-US", false);
+
+            Graph g = graphControl.Graph;
+            Vector[] drawing = graphControl.Drawing;
+
+            if (g == null || drawing == null)
+            {
+                SystemSounds.Exclamation.Play();
+                return;
+            }
+
+
+            RectangleF rect = Geometry.GetSurroundingRectangle(drawing);
+
+            float xScale = 10f / rect.Width;
+            float yScale = 5f / rect.Height;
+
+            float scale = Math.Min(xScale, yScale);
+
+            if (scale < 1f)
+            {
+                Vector[] drawing2 = (Vector[])drawing.Clone();
+
+                for (int vId = 0; vId < g.Size; vId++)
+                {
+                    drawing2[vId] *= scale;
+                }
+
+                drawing = drawing2;
+            }
+
+
+            StringBuilder sb = new StringBuilder();
+
+            sb.AppendLine(@"\begin{tikzpicture}");
+            sb.AppendLine();
+
+            for (int vId = 0; vId < g.Size; vId++)
+            {
+                Vector pt = drawing[vId];
+                sb.AppendLine(string.Format(engCI, @"\coordinate(co{0}) at ({1:0.0000}, {2:0.0000});", letters[vId], pt.X, -pt.Y));
+            }
+            sb.AppendLine();
+
+            for (int vId = 0; vId < g.Size; vId++)
+            {
+                List<int> neighs = new List<int>(g[vId]);
+                neighs.Sort();
+
+                for (int i = 0; i < neighs.Count; i++)
+                {
+                    int uId = neighs[i];
+                    if (uId <= vId) continue;
+
+                    sb.AppendLine(string.Format(@"\draw (co{0}) -- (co{1});", letters[vId], letters[uId]));
+                }
+            }
+            sb.AppendLine();
+
+            for (int vId = 0; vId < g.Size; vId++)
+            {
+                sb.AppendLine(string.Format(@"\node[gN] (n{0}) at (co{0}) {{}};", letters[vId]));
+                sb.AppendLine(string.Format(@"\node at (co{0}) {{${1}$}};", letters[vId], letters[vId].ToString().ToLower()));
+            }
+            sb.AppendLine();
+
+            sb.AppendLine(@"\end{tikzpicture}");
+
+            Form f = new Form();
+            TextBox txt = new TextBox();
+            f.Controls.Add(txt);
+            txt.Dock = DockStyle.Fill;
+            txt.Multiline = true;
+            txt.ScrollBars = ScrollBars.Both;
+            txt.Font = new Font("Consolas", 10f);
+            txt.Text = sb.ToString();
+            f.Show();
         }
     }
 }

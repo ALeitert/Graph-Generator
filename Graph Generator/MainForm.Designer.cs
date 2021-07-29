@@ -41,6 +41,7 @@ namespace GraphGenerator
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.lblSeed = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.btnTikzExport = new System.Windows.Forms.ToolStripButton();
             this.pnlToolBar = new System.Windows.Forms.Panel();
             this.graphControl = new GraphGenerator.GraphControl();
             this.mainToolBar.SuspendLayout();
@@ -58,7 +59,8 @@ namespace GraphGenerator
             this.btnGenerate,
             this.toolStripSeparator1,
             this.lblSeed,
-            this.toolStripSeparator2});
+            this.toolStripSeparator2,
+            this.btnTikzExport});
             this.mainToolBar.Location = new System.Drawing.Point(0, 0);
             this.mainToolBar.Name = "mainToolBar";
             this.mainToolBar.Size = new System.Drawing.Size(776, 25);
@@ -135,6 +137,17 @@ namespace GraphGenerator
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 25);
             // 
+            // btnTikzExport
+            // 
+            this.btnTikzExport.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnTikzExport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnTikzExport.Image = ((System.Drawing.Image)(resources.GetObject("btnTikzExport.Image")));
+            this.btnTikzExport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnTikzExport.Name = "btnTikzExport";
+            this.btnTikzExport.Size = new System.Drawing.Size(33, 22);
+            this.btnTikzExport.Text = "TikZ";
+            this.btnTikzExport.Click += new System.EventHandler(this.btnTikzExport_Click);
+            // 
             // pnlToolBar
             // 
             this.pnlToolBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -188,5 +201,6 @@ namespace GraphGenerator
         private System.Windows.Forms.ToolStripSplitButton btnGenerate;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerateRandom;
         private System.Windows.Forms.ToolStripMenuItem mnuGenerateTriangulation;
+        private System.Windows.Forms.ToolStripButton btnTikzExport;
     }
 }
